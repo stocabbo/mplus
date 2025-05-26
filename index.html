@@ -1,87 +1,64 @@
+
 <!DOCTYPE html>
 <html lang="it">
- <head>
-  <link href="favicon.ico" rel="icon" type="image/x-icon"/>
-  <link href="icon-192.png" rel="apple-touch-icon" sizes="192x192"/>
-  <link href="manifest.json" rel="manifest"/>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-   Calcolo Giornaliero MPLUS
-  </title>
-  <link href="style.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
-  <link href="manifest.json" rel="manifest"/>
-  <meta content="yes" name="apple-mobile-web-app-capable"/>
-  <meta content="#007aff" name="theme-color"/>
- </head>
- <body>
+<head>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcolo Giornaliero MPLUS</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#007aff">
+</head>
+<body>
   <div class="phone">
-   <h1>
-    Calcolo Giornaliero MPLUS
-   </h1>
-   <div class="input-group">
-    <label for="ora_ingresso">
-     Ora ingresso (HH:MM)
-    </label>
-    <input id="ora_ingresso" type="time"/>
-   </div>
-   <div class="toggle-group">
-    <span id="toggle_label">
-     Corta
-    </span>
-   </div>
-   <div class="result-cards" id="output">
-   </div>
-   <div id="countdown" style="text-align:center;margin-top:10px;font-weight:500;font-size:16px;">
-   </div>
+    <h1>Calcolo Giornaliero MPLUS</h1>
+
+    <div class="input-group">
+      <label for="ora_ingresso">Ora ingresso (HH:MM)</label>
+      <input type="time" id="ora_ingresso">
+    </div>
+
+    <div class="toggle-group">
+      <label class="switch">
+        <input type="checkbox" id="toggle_giornata">
+        <span class="slider"></span>
+      </label>
+      <span id="toggle_label">Corta</span>
+    </div>
+
+    <div id="output" class="result-cards"></div>
+<div id="countdown" style="text-align:center;margin-top:10px;font-weight:500;font-size:16px;"></div>
   </div>
-  <script src="script.js">
-  </script>
-  <audio id="ping" preload="auto" src="ping.mp3">
-  </audio>
-  <div class="onboarding" id="onboarding">
-   <div class="onboarding-slide active">
-    <h2>
-     Benvenuto in MPLUS
-    </h2>
-    <p>
-     Calcola facilmente l'orario di uscita ottimale.
-    </p>
-    <button aria-label="Avanti slide onboarding" class="next" onclick="prossimaSlide()">
-     Avanti
-    </button>
-   </div>
-   <div class="onboarding-slide">
-    <h2>
-     Orari intelligenti
-    </h2>
-    <p>
-     Ottieni il Buono Pasto o accumula minuti in modo strategico.
-    </p>
-    <button aria-label="Avanti slide onboarding" class="next" onclick="prossimaSlide()">
-     Avanti
-    </button>
-   </div>
-   <div class="onboarding-slide">
-    <h2>
-     Regole rapide
-    </h2>
+
+  <script src="script.js"></script>
+<audio id="ping" src="ping.mp3" preload="auto"></audio>
+
+<div id="onboarding" class="onboarding">
+  <div class="onboarding-slide active">
+    <h2>Benvenuto in MPLUS</h2>
+    <p>Calcola facilmente l'orario di uscita ottimale.</p>
+    <button onclick="prossimaSlide()">Avanti</button>
+  </div>
+  <div class="onboarding-slide">
+    <h2>Orari intelligenti</h2>
+    <p>Ottieni il Buono Pasto o accumula minuti in modo strategico.</p>
+    <button onclick="prossimaSlide()">Avanti</button>
+  </div>
+  <div class="onboarding-slide">
+    <h2>Regole rapide</h2>
     <ul>
-     <li>
-      ✅ BP con almeno 6h01m
-     </li>
-     <li>
-      &rarrhk;︎ Accumulo max 29 min
-     </li>
-     <li>
-      ⛔ Mai oltre le 19:30
-     </li>
+      <li>✅ BP con almeno 6h01m</li>
+      <li>↪︎ Accumulo max 29 min</li>
+      <li>⛔ Mai oltre le 19:30</li>
     </ul>
-    <button aria-label="Avvia MPLUS" onclick="chiudiOnboarding()">
-     Avvia MPLUS
-    </button>
-   </div>
+    <button onclick="chiudiOnboarding()">Avvia MPLUS</button>
   </div>
- </body>
+</div>
+
+</body>
 </html>
