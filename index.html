@@ -12,10 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#007aff">
-  <link rel="apple-touch-startup-image" href="apple-splash-1170x2532.png"
-    media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)">
 </head>
 <body>
   <div class="phone">
@@ -35,16 +32,6 @@
     </div>
 
     <div id="output" class="result-cards"></div>
-<div style="margin-top:16px;height:24px;width:100%;background:#ddd;border-radius:6px;overflow:hidden;position:relative;">
-  
-  <div id="countdown-container" style="margin-top:16px;height:24px;width:100%;background:#ddd;border-radius:6px;overflow:hidden;position:relative;">
-    <div id="countdown_bar" style="height:100%;width:0;background:#007aff;transition:width 1s linear;"></div>
-    <div id="countdown" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:14px;color:#000;">
-      ⏳ In attesa...
-    </div>
-  </div>
-
-</div>
 <div id="countdown" style="text-align:center;margin-top:10px;font-weight:500;font-size:16px;"></div>
   </div>
 
@@ -72,19 +59,6 @@
     <button onclick="chiudiOnboarding()">Avvia MPLUS</button>
   </div>
 </div>
-
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const input = document.getElementById("ora_ingresso");
-    if (input && !input.value) {
-      const now = new Date();
-      const hh = String(now.getHours()).padStart(2, '0');
-      const mm = String(now.getMinutes()).padStart(2, '0');
-      input.value = `${hh}:${mm}`;
-    }
-  });
-</script>
 
 </body>
 </html>
