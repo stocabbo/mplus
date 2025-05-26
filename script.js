@@ -120,11 +120,14 @@ function aggiornaRisultati() {
   `;
 
   document.getElementById('output').innerHTML = outputHTML;
+  const oraStrategica = estraiOrario(result.uscita_strategica);
+  if (oraStrategica) startCountdown(oraStrategica);
 }
 
 document.getElementById('ora_ingresso').addEventListener('input', aggiornaRisultati);
 document.getElementById('toggle_giornata').addEventListener('change', aggiornaRisultati);
 window.addEventListener('DOMContentLoaded', () => {
+  requestNotificationPermission();
   const urlParams = new URLSearchParams(window.location.search);
   const paramOra = urlParams.get("ora");
   const oraInput = document.getElementById('ora_ingresso');
@@ -138,3 +141,54 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   aggiornaRisultati();
 });
+
+let countdownInterval;
+
+function startCountdown(orarioTarget) {
+  clearInterval(countdownInterval);
+  const countdownEl = document.getElementById("countdown");
+
+  function updateCountdown() {
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    const [hh, mm] = orarioTarget.split(":").map(Number);
+    const targetMin = hh * 60 + mm;
+    const diffSec = (targetMin - nowMin) * 60 - now.getSeconds();
+
+    if (diffSec <= 0) {
+      countdownEl.textContent = "⏰ È ora di uscire!"; playPingSound(); if ("Notification" in window && Notification.permission === "granted") { new Notification("È ora di uscire!"); }
+      clearInterval(countdownInterval);
+      return;
+    }
+
+    const h = Math.floor(diffSec / 3600);
+    const m = Math.floor((diffSec % 3600) / 60);
+    const s = diffSec % 60;
+
+    countdownEl.textContent = `⏳ Esci tra: ${h.toString().padStart(2,'0')}h ${m.toString().padStart(2,'0')}m ${s.toString().padStart(2,'0')}s`;
+  }
+
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+// Estrae l'ora (hh:mm) da una stringa tipo "15:30 (EFF...)"
+function estraiOrario(str) {
+  const match = str.match(/^\d{2}:\d{2}/);
+  return match ? match[0] : null;
+}
+
+
+function requestNotificationPermission() {
+  if ("Notification" in window && Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+}
+
+function playPingSound() {
+  const audio = document.getElementById("ping");
+  if (audio) {
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  }
+}
