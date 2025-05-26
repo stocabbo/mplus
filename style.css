@@ -205,6 +205,9 @@ input:checked + .slider:before {
 }
 
 .onboarding-slide {
+  padding: 1.8rem;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   display: none;
 }
 
