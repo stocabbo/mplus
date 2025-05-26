@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcolo Giornaliero MPLUS</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#007aff">
+</head>
+<body>
+  <div class="phone">
+    <h1>Calcolo Giornaliero MPLUS</h1>
+
+    <div class="input-group">
+      <label for="ora_ingresso">Ora ingresso (HH:MM)</label>
+      <input type="time" id="ora_ingresso">
+    </div>
+
+    <div class="toggle-group">
+      <label class="switch">
+        <input type="checkbox" id="toggle_giornata">
+        <span class="slider"></span>
+      </label>
+      <span id="toggle_label">Corta</span>
+    </div>
+
+    <div id="output" class="result-cards"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
