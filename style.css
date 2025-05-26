@@ -156,6 +156,9 @@ input:checked + .slider:before {
 }
 
 @media (prefers-color-scheme: dark) {
+  #countdown_bar {
+    background: #4da6ff;
+  }
   body {
     background: #111;
     color: #eee;

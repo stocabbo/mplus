@@ -156,7 +156,7 @@ function startCountdown(orarioTarget) {
     const diffSec = (targetMin - nowMin) * 60 - now.getSeconds();
 
     if (diffSec <= 0) {
-      countdownEl.textContent = "⏰ È ora di uscire!"; playPingSound(); if ("Notification" in window && Notification.permission === "granted") { new Notification("È ora di uscire!"); }
+      if (countdownEl) countdownEl.textContent = "⏰ È ora di uscire!"; playPingSound(); if ("Notification" in window && Notification.permission === "granted") { new Notification("È ora di uscire!"); }
       clearInterval(countdownInterval);
       return;
     }
