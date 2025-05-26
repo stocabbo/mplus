@@ -97,6 +97,10 @@ function calcolaGiornata(tipo, IN1) {
 }
 
 function aggiornaRisultati() {
+  const countdownEl = document.getElementById("countdown");
+  const progressBar = document.getElementById("countdown_bar");
+  if (!countdownEl || !document.getElementById('ora_ingresso') || !document.getElementById('output')) return;
+
   const oraIngresso = document.getElementById('ora_ingresso').value;
   const tipoGiornata = document.getElementById('toggle_giornata').checked ? "lunga" : "corta";
   const labelToggle = document.getElementById('toggle_label');
