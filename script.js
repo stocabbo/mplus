@@ -1,4 +1,3 @@
-
 function timeToMinutes(timeStr) {
   const [h, m] = timeStr.split(':').map(Number);
   return h * 60 + m;
@@ -144,46 +143,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 let countdownInterval;
 
-function startCountdown(orarioTarget) {
-  clearInterval(countdownInterval);
-  const countdownEl = document.getElementById("countdown");
 
-  function updateCountdown() {
-    const now = new Date();
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    const [hh, mm] = orarioTarget.split(":").map(Number);
-    const targetMin = hh * 60 + mm;
-    const diffSec = (targetMin - nowMin) * 60 - now.getSeconds();
-
-    if (diffSec <= 0) {
-      countdownEl.textContent = "⏰ È ora di uscire!"; playPingSound(); if ("Notification" in window && Notification.permission === "granted") { new Notification("È ora di uscire!"); }
-      clearInterval(countdownInterval);
-      return;
-    }
-
-    const h = Math.floor(diffSec / 3600);
-    const m = Math.floor((diffSec % 3600) / 60);
-    const s = diffSec % 60;
-
-    countdownEl.textContent = `⏳ Esci tra: ${h.toString().padStart(2,'0')}h ${m.toString().padStart(2,'0')}m ${s.toString().padStart(2,'0')}s`;
-  }
-
-  updateCountdown();
-  countdownInterval = setInterval(updateCountdown, 1000);
-}
-
-// Estrae l'ora (hh:mm) da una stringa tipo "15:30 (EFF...)"
-function estraiOrario(str) {
-  const match = str.match(/^\d{2}:\d{2}/);
-  return match ? match[0] : null;
-}
-
-
-function requestNotificationPermission() {
-  if ("Notification" in window && Notification.permission !== "granted") {
-    Notification.requestPermission();
-  }
-}
 
 function playPingSound() {
   const audio = document.getElementById("ping");
@@ -220,4 +180,46 @@ function prossimaSlide() {
     onboardingIndex++;
     mostraSlide();
   }
+}
+
+let countdownInterval = null;
+let countdownStart = null;
+let countdownEnd = null;
+
+function startCountdown(orarioTarget) {
+  clearInterval(countdownInterval);
+  const countdownEl = document.getElementById("countdown");
+  const progressBar = document.getElementById("countdown_bar");
+  const now = new Date();
+  countdownStart = now;
+
+  const [hh, mm] = orarioTarget.split(":").map(Number);
+  countdownEnd = new Date();
+  countdownEnd.setHours(hh, mm, 0, 0);
+
+  function updateCountdown() {
+    const now = new Date();
+    const totalDuration = countdownEnd - countdownStart;
+    const remaining = countdownEnd - now;
+    const percent = Math.max(0, Math.min(100, 100 * (1 - remaining / totalDuration)));
+
+    if (progressBar) progressBar.style.width = percent + "%";
+
+    if (remaining <= 0) {
+      if (countdownEl) countdownEl.textContent = "⏰ È ora di uscire!";
+      playPingSound();
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("⏰ È ora di uscire!");
+      }
+      clearInterval(countdownInterval);
+      return;
+    }
+
+    const mins = Math.floor((remaining / 1000) / 60);
+    const secs = Math.floor((remaining / 1000) % 60);
+    if (countdownEl) countdownEl.textContent = `⏳ Esci tra: ${mins}m ${secs.toString().padStart(2, "0")}s`;
+  }
+
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
 }
