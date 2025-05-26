@@ -155,11 +155,7 @@ input:checked + .slider:before {
   display: inline-block;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #111;
-    color: #eee;
-  }
+
 
   .phone {
     background: #1e1e1e;
@@ -228,4 +224,20 @@ input:checked + .slider:before {
   border: none;
   border-radius: 12px;
   cursor: pointer;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  .onboarding-slide {
+    background-color: #111 !important;
+    color: #fff !important;
+  }
+  .onboarding-slide button {
+    background-color: #007aff !important;
+    color: #fff !important;
+  }
+  .onboarding-slide h2,
+  .onboarding-slide p {
+    color: #fff !important;
+  }
 }
