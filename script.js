@@ -103,8 +103,8 @@ function aggiornaRisultati() {
 
   const oraIngresso = document.getElementById('ora_ingresso').value;
   const tipoGiornata = document.getElementById('toggle_giornata').checked ? "lunga" : "corta";
-  const labelToggle = document.getElementById('toggle_label');
-  labelToggle.textContent = tipoGiornata.charAt(0).toUpperCase() + tipoGiornata.slice(1);
+  document.getElementById('label_corta')?.classList.toggle('selected', tipoGiornata === "corta");
+  document.getElementById('label_lunga')?.classList.toggle('selected', tipoGiornata === "lunga");
 
   if (!oraIngresso) {
     document.getElementById('output').innerHTML = "";
