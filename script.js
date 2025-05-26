@@ -1,3 +1,8 @@
+function estraiOrario(input) {
+  const [hh, mm] = input.value.split(":").map(Number);
+  return new Date().setHours(hh, mm, 0, 0);
+}
+
 function timeToMinutes(timeStr) {
   const [h, m] = timeStr.split(':').map(Number);
   return h * 60 + m;
@@ -222,4 +227,10 @@ function startCountdown(orarioTarget) {
 
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+function requestNotificationPermission() {
+  if ("Notification" in window && Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
 }
