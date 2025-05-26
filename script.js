@@ -130,7 +130,7 @@ function aggiornaRisultati() {
 
   document.getElementById('output').innerHTML = outputHTML;
   const oraStrategica = estraiOrario(result.uscita_strategica);
-  if (oraStrategica) startCountdown(oraStrategica);
+  if (oraStrategica) if (oraStrategica) startCountdown(oraStrategica);
 }
 
 document.getElementById('ora_ingresso').addEventListener('input', aggiornaRisultati);
