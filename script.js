@@ -97,14 +97,10 @@ function calcolaGiornata(tipo, IN1) {
 }
 
 function aggiornaRisultati() {
-  const countdownEl = document.getElementById("countdown");
-  const progressBar = document.getElementById("countdown_bar");
-  if (!countdownEl || !document.getElementById('ora_ingresso') || !document.getElementById('output')) return;
-
   const oraIngresso = document.getElementById('ora_ingresso').value;
   const tipoGiornata = document.getElementById('toggle_giornata').checked ? "lunga" : "corta";
-  document.getElementById('label_corta')?.classList.toggle('selected', tipoGiornata === "corta");
-  document.getElementById('label_lunga')?.classList.toggle('selected', tipoGiornata === "lunga");
+  const labelToggle = document.getElementById('toggle_label');
+  labelToggle.textContent = tipoGiornata.charAt(0).toUpperCase() + tipoGiornata.slice(1);
 
   if (!oraIngresso) {
     document.getElementById('output').innerHTML = "";
@@ -160,7 +156,7 @@ function startCountdown(orarioTarget) {
     const diffSec = (targetMin - nowMin) * 60 - now.getSeconds();
 
     if (diffSec <= 0) {
-      if (countdownEl) countdownEl.textContent = "⏰ È ora di uscire!"; playPingSound(); if ("Notification" in window && Notification.permission === "granted") { new Notification("È ora di uscire!"); }
+      countdownEl.textContent = "⏰ È ora di uscire!"; playPingSound(); if ("Notification" in window && Notification.permission === "granted") { new Notification("È ora di uscire!"); }
       clearInterval(countdownInterval);
       return;
     }

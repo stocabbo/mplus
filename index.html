@@ -12,13 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#007aff">
-
-  <!-- Apple Splash Screen -->
   <link rel="apple-touch-startup-image" href="apple-splash-1170x2532.png"
     media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)">
-
 </head>
 <body>
   <div class="phone">
@@ -29,26 +25,20 @@
       <input type="time" id="ora_ingresso">
     </div>
 
-    
-    <div class="toggle-group toggle-dual-label">
-      <span id="label_corta" class="toggle-label selected">Corta</span>
+    <div class="toggle-group">
       <label class="switch">
         <input type="checkbox" id="toggle_giornata">
         <span class="slider"></span>
       </label>
-      <span id="label_lunga" class="toggle-label">Lunga</span>
+      <span id="toggle_label">Corta</span>
     </div>
-    
 
     <div id="output" class="result-cards"></div>
-
-    
-    <div style="margin-top:8px;height:24px;width:100%;background:#ddd;border-radius:6px;overflow:hidden;position:relative;">
-      <div id="countdown_bar" style="height:100%;width:0;background:#007aff;transition:width 1s linear;"></div>
-      <div id="countdown" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:14px;color:#000;"></div>
-    </div>
-    
-    
+<div style="margin-top:16px;height:24px;width:100%;background:#ddd;border-radius:6px;overflow:hidden;position:relative;">
+  <div id="countdown_bar" style="height:100%;width:0;background:#007aff;transition:width 1s linear;"></div>
+  <div id="countdown" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:14px;color:#000;"></div>
+</div>
+<div id="countdown" style="text-align:center;margin-top:10px;font-weight:500;font-size:16px;"></div>
   </div>
 
   <script src="script.js"></script>

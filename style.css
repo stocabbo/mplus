@@ -156,9 +156,6 @@ input:checked + .slider:before {
 }
 
 @media (prefers-color-scheme: dark) {
-  #countdown_bar {
-    background: #4da6ff;
-  }
   body {
     background: #111;
     color: #eee;
@@ -205,9 +202,6 @@ input:checked + .slider:before {
 }
 
 .onboarding-slide {
-  padding: 1.8rem;
-  border-radius: 18px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   display: none;
 }
 
@@ -234,23 +228,4 @@ input:checked + .slider:before {
   border: none;
   border-radius: 12px;
   cursor: pointer;
-}
-
-.toggle-dual-label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.toggle-label {
-  font-weight: 500;
-  font-size: 15px;
-  opacity: 0.6;
-  transition: 0.3s;
-}
-
-.toggle-label.selected {
-  font-weight: 600;
-  opacity: 1;
 }
