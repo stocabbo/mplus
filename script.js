@@ -144,11 +144,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 let countdownInterval;
 
-let earlyNotificationSent = false;
-
 function startCountdown(orarioTarget) {
   clearInterval(countdownInterval);
-  earlyNotificationSent = false;
   const countdownEl = document.getElementById("countdown");
 
   function updateCountdown() {
@@ -159,20 +156,9 @@ function startCountdown(orarioTarget) {
     const diffSec = (targetMin - nowMin) * 60 - now.getSeconds();
 
     if (diffSec <= 0) {
-      countdownEl.textContent = "⏰ È ora di uscire!";
-      playPingSound();
-      if ("Notification" in window && Notification.permission === "granted") {
-        new Notification("⏰ È ora di uscire!");
-      }
+      countdownEl.textContent = "⏰ È ora di uscire!"; playPingSound(); if ("Notification" in window && Notification.permission === "granted") { new Notification("È ora di uscire!"); }
       clearInterval(countdownInterval);
       return;
-    }
-
-    if (diffSec <= 600 && !earlyNotificationSent) {
-      if ("Notification" in window && Notification.permission === "granted") {
-        new Notification("⏳ Tra 10 minuti: preparati a uscire!");
-      }
-      earlyNotificationSent = true;
     }
 
     const h = Math.floor(diffSec / 3600);
@@ -184,6 +170,19 @@ function startCountdown(orarioTarget) {
 
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+// Estrae l'ora (hh:mm) da una stringa tipo "15:30 (EFF...)"
+function estraiOrario(str) {
+  const match = str.match(/^\d{2}:\d{2}/);
+  return match ? match[0] : null;
+}
+
+
+function requestNotificationPermission() {
+  if ("Notification" in window && Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
 }
 
 function playPingSound() {

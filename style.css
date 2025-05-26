@@ -229,22 +229,3 @@ input:checked + .slider:before {
   border-radius: 12px;
   cursor: pointer;
 }
-
-
-
-.onboarding-slide h2 {
-  color: #000;
-}
-
-.onboarding-slide p,
-.onboarding-slide ul {
-  color: #333;
-}
-
-@media (prefers-color-scheme: dark) {
-  .onboarding-slide h2,
-  .onboarding-slide p,
-  .onboarding-slide ul {
-    color: #fff;
-  }
-}
