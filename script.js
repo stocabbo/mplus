@@ -221,3 +221,19 @@ function prossimaSlide() {
     mostraSlide();
   }
 }
+
+
+
+// Gestione avanzamento onboarding
+document.querySelectorAll(".onboarding .next").forEach((button, index, buttons) => {
+  button.addEventListener("click", () => {
+    const slides = document.querySelectorAll(".onboarding-slide");
+    slides[index].classList.add("hidden");
+    if (slides[index + 1]) {
+      slides[index + 1].classList.remove("hidden");
+    } else {
+      document.querySelector(".onboarding").classList.add("hidden");
+      localStorage.setItem("mplusOnboardingDone", "true");
+    }
+  });
+});
