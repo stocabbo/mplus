@@ -1,7 +1,12 @@
+
 function estraiOrario(input) {
+  if (!input || !input.value || !input.value.includes(":")) return null;
   const [hh, mm] = input.value.split(":").map(Number);
-  return new Date().setHours(hh, mm, 0, 0);
+  const date = new Date();
+  date.setHours(hh, mm, 0, 0);
+  return date;
 }
+
 
 function timeToMinutes(timeStr) {
   const [h, m] = timeStr.split(':').map(Number);
