@@ -206,8 +206,6 @@ function mostraSlide() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  onboardingIndex = 0;
-  mostraSlide();
   if (!localStorage.getItem("mplus_onboarding")) {
     mostraSlide();
     

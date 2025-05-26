@@ -23,16 +23,24 @@
       <input type="time" id="ora_ingresso">
     </div>
 
-    <div class="toggle-group">
+    
+    <div class="toggle-group toggle-dual-label">
+      <span id="label_corta" class="toggle-label selected">Corta</span>
       <label class="switch">
         <input type="checkbox" id="toggle_giornata">
         <span class="slider"></span>
       </label>
-      <span id="toggle_label">Corta</span>
+      <span id="label_lunga" class="toggle-label">Lunga</span>
     </div>
+    
 
     <div id="output" class="result-cards"></div>
-<div id="countdown" style="text-align:center;margin-top:10px;font-weight:500;font-size:16px;"></div>
+
+    <div id="countdown" style="text-align:center;margin-top:10px;font-weight:500;font-size:16px;"></div>
+    <div style="margin-top:8px;height:6px;width:100%;background:#ddd;border-radius:4px;overflow:hidden;">
+      <div id="countdown_bar" style="height:100%;width:0;background:#007aff;transition:width 1s linear;"></div>
+    </div>
+    
   </div>
 
   <script src="script.js"></script>
