@@ -182,7 +182,7 @@ function prossimaSlide() {
   }
 }
 
-let countdownInterval = null;
+
 let countdownStart = null;
 let countdownEnd = null;
 
