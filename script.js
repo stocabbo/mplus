@@ -194,3 +194,49 @@ function playPingSound() {
 }
 
 
+
+
+
+// ✅ TEST AUTOMATICI MPLUS
+function testCalcolaBP() {
+  console.group("🔍 Test calcolaBP()");
+  console.assert(minutesToTime(timeToMinutes("08:30") + 361) === "14:31", "❌ Test 1 fallito: expected 14:31");
+  console.assert(minutesToTime(timeToMinutes("07:59") + 361) === "14:00", "❌ Test 2 fallito: expected 14:00");
+  console.assert(minutesToTime(timeToMinutes("09:00") + 361) === "15:01", "❌ Test 3 fallito: expected 15:01");
+  console.log("✅ Tutti i test calcolaBP completati.");
+  console.groupEnd();
+}
+
+function testEstratti() {
+  console.group("🔍 Test estraiOrario()");
+  const esempio = "15:28 (EFF 6h20m, ACC 20 min)";
+  const parsed = estraiOrario(esempio);
+  console.assert(parsed === "15:28", "❌ Test 1 fallito: estraiOrario");
+  console.log("✅ Tutti i test estraiOrario completati.");
+  console.groupEnd();
+}
+
+function testStrategico() {
+  console.group("🔍 Test calcolaGiornata()");
+  const r1 = calcolaGiornata("corta", timeToMinutes("09:32"));
+  console.assert(r1.uscita_stimata.startsWith("16:03"), "❌ Test 1 stimata: expected 16:03");
+  console.assert(r1.uscita_strategica.startsWith("16:22") === false, "✅ Test 2 strategica: acc e rec superano 29 min, ridotto");
+
+  const r2 = calcolaGiornata("lunga", timeToMinutes("11:49"));
+  console.assert(r2.uscita_strategica <= "19:30", "❌ Test 3: limite orario massimo superato");
+
+  const r3 = calcolaGiornata("corta", timeToMinutes("08:38"));
+  console.assert(r3.uscita_strategica.startsWith("15:28"), "❌ Test 4: strategica errata su caso classico");
+
+  console.log("✅ Tutti i test calcolaGiornata completati.");
+  console.groupEnd();
+}
+
+// Avvio automatico
+(() => {
+  console.groupCollapsed("🧪 Test Unitari MPLUS");
+  testCalcolaBP();
+  testEstratti();
+  testStrategico();
+  console.groupEnd();
+})();
