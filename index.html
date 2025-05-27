@@ -1,45 +1,43 @@
-<!-- index.html con supporto Tailwind CDN + test unitari su console -->
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcolo Giornaliero MPLUS</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <title>MPLUS</title>
-  <link rel="icon" href="favicon.ico" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="apple-touch-startup-image" href="apple-splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)">
+  <meta name="theme-color" content="#007aff">
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-black dark:text-white font-sans min-h-screen p-4">
+<body>
+  <div class="phone">
+    <h1>Calcolo Giornaliero MPLUS</h1>
 
-  <div class="max-w-md mx-auto">
-    <h1 class="text-2xl font-bold mb-4 text-center">🕒 MPLUS</h1>
-    <label for="ora_ingresso" class="block mb-1 text-sm font-medium">Ora di ingresso</label>
-    <input id="ora_ingresso" type="time" class="w-full mb-4 px-4 py-2 rounded border border-gray-300 dark:bg-gray-800" onchange="aggiornaRisultati()" />
-    <div class="flex justify-center items-center gap-4 mb-4">
-      <span id="label_corta" class="text-sm font-medium opacity-60">Corta</span>
-      <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" id="toggle_giornata" class="sr-only peer" onchange="aggiornaRisultati()">
-        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600"></div>
-      </label>
-      <span id="label_lunga" class="text-sm font-medium opacity-60">Lunga</span>
+    <div class="input-group">
+      <label for="ora_ingresso">Ora ingresso (HH:MM)</label>
+      <input type="time" id="ora_ingresso">
     </div>
-    <div id="output" class="mb-4"></div>
-    <div id="countdown" class="text-center text-sm text-blue-600"></div>
+
+    <div class="toggle-group">
+      <label class="switch">
+        <input type="checkbox" id="toggle_giornata">
+        <span class="slider"></span>
+      </label>
+      <span id="toggle_label">Corta</span>
+    </div>
+
+    <div id="output" class="result-cards"></div>
+<div id="countdown" style="text-align:center;margin-top:10px;font-weight:500;font-size:16px;"></div>
   </div>
+
   <script src="script.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const input = document.getElementById("ora_ingresso");
-      if (input && !input.value) {
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        input.value = `${hh}:${mm}`;
-      }
-      aggiornaRisultati();
-    });
-  </script>
+<audio id="ping" src="ping.mp3" preload="auto"></audio>
+
 </body>
 </html>
