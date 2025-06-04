@@ -44,22 +44,22 @@ function calcolaGiornata(tipo, IN1) {
       uscita_strategica = 1170;
       ore_eff_strategica = uscita_strategica - ingresso - pausa;
       const accumulo = Math.max(0, ore_eff_strategica - durata_teorica);
-      stato = "red";
-      badge = "⚠️ 19:30";
-      suggerimento = "La sede chiude alle 19:30. Accumulo limitato a " + accumulo + " min.";
+        stato = "red";
+        badge = "⚠️ 19:30";
+        suggerimento = `⚠️ Chiusura 19:30: accumulo max ${accumulo} min.`;
     } else if (accumulo_dichiarato > max_totale) {
       const ecc = ore_eff_strategica - durata_teorica;
-      stato = "yellow";
-      badge = `↪︎ +${ecc} min`;
-      suggerimento = "Limite massimo raggiunto (29 min). Accumulo ridotto.";
+        stato = "yellow";
+        badge = `↪︎ +${ecc} min`;
+        suggerimento = "⚠️ Massimo 29 min raggiunto, accumulo ridotto.";
     } else {
       const ecc = ore_eff_strategica - durata_teorica;
       if (ecc > 0) {
         stato = "yellow";
         badge = `↪︎ +${ecc} min`;
-        suggerimento = "Esci alle " + minutesToTime(uscita_strategica) + " per accumulare " + ecc + " minuti.";
+        suggerimento = `⏱️ Esci alle ${minutesToTime(uscita_strategica)} per +${ecc} min.`;
       } else {
-        suggerimento = "Buono pasto valido. Rispetta la pausa di 30 minuti.";
+        suggerimento = "🍽️ Pausa di 30 min. Buono pasto ok.";
       }
     }
   } else {
@@ -68,19 +68,19 @@ function calcolaGiornata(tipo, IN1) {
     ore_eff_strategica = uscita_strategica - ingresso - pausa;
 
     if (uscita_normale > 1170) {
-      stato = "red";
-      badge = "⚠️ 19:30";
-      suggerimento = "La sede chiude alle 19:30. Inserisci un recupero ore.";
+        stato = "red";
+        badge = "⚠️ 19:30";
+        suggerimento = "⚠️ Chiusura 19:30: pianifica un recupero.";
     } else if (uscita_bp >= 1170) {
-      stato = "red";
-      badge = "⚠️ 19:30";
-      suggerimento = "La sede chiude alle 19:30. Inserisci un recupero ore.";
+        stato = "red";
+        badge = "⚠️ 19:30";
+        suggerimento = "⚠️ Chiusura 19:30: pianifica un recupero.";
     } else if (ore_eff_strategica >= 510) {
-      stato = "yellow";
-      badge = "↪︎ -30 min";
-      suggerimento = "Puoi anche uscire alle " + minutesToTime(uscita_normale) + " per non fare anticipo.";
+        stato = "yellow";
+        badge = "↪︎ -30 min";
+        suggerimento = `↪️ Uscita normale ${minutesToTime(uscita_normale)} se vuoi evitare anticipo.`;
     } else {
-      suggerimento = "Buono pasto valido. Rispetta la pausa di 30 minuti.";
+        suggerimento = "🍽️ Pausa di 30 min. Buono pasto ok.";
     }
   }
 
@@ -232,8 +232,7 @@ function testStrategico() {
   console.groupEnd();
 }
 
-// Avvio automatico
-(() => {
+(function runTests() {
   console.groupCollapsed("🧪 Test Unitari MPLUS");
   testCalcolaBP();
   testEstratti();

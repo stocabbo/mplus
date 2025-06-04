@@ -37,7 +37,7 @@ Non sono richiesti ambienti di build particolari. È sufficiente un server stati
 
 ## Note Aggiuntive
 
-- In `index.html` il manifest viene incluso due volte; è sufficiente un solo riferimento.
-- Nel `manifest.json` la proprietà `start_url` va indicata senza il punto finale (es. `/mplus/`).
-- La sezione di test in `script.js` include commenti che potrebbero essere rinominati per maggiore chiarezza.
+Le indicazioni qui riportate facevano riferimento a problemi ora risolti (doppio
+manifest, `start_url` errato e commenti dei test). Il progetto è già aggiornato
+di conseguenza.
 
