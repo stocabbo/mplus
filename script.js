@@ -197,7 +197,7 @@ function playPingSound() {
 
 
 
-// ✅ TEST AUTOMATICI MPLUS
+// Avvio dei test automatici MPLUS
 function testCalcolaBP() {
   console.group("🔍 Test calcolaBP()");
   console.assert(minutesToTime(timeToMinutes("08:30") + 361) === "14:31", "❌ Test 1 fallito: expected 14:31");

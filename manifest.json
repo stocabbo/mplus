@@ -1,7 +1,7 @@
 {
   "name": "MPLUS",
   "short_name": "MPLUS",
-  "start_url": "/mplus.",
+  "start_url": "/mplus/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007aff",

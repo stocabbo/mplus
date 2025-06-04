@@ -8,9 +8,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calcolo Giornaliero MPLUS</title>
+  <meta name="description" content="Calcola l'orario di uscita ottimale dal lavoro con supporto offline.">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#007aff">
@@ -26,14 +26,14 @@
 
     <div class="toggle-group">
       <label class="switch">
-        <input type="checkbox" id="toggle_giornata">
+        <input type="checkbox" id="toggle_giornata" aria-labelledby="toggle_label">
         <span class="slider"></span>
       </label>
       <span id="toggle_label">Corta</span>
     </div>
 
     <div id="output" class="result-cards"></div>
-<div id="countdown" style="text-align:center;margin-top:10px;font-weight:500;font-size:16px;"></div>
+<div id="countdown" class="countdown"></div>
   </div>
 
   <script src="script.js"></script>
