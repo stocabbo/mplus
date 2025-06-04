@@ -155,6 +155,15 @@ input:checked + .slider:before {
   display: inline-block;
 }
 
+/* Countdown styling moved from inline HTML */
+#countdown,
+.countdown {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     background: #111;
