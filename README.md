@@ -47,6 +47,45 @@ Non sono richiesti ambienti di build particolari. È sufficiente un server stati
 Esempio: `https://stocabbo.github.io/mplus/quick.html?ora=08:30&out=all`
 
 La pagina `quick.html` esegue i calcoli con JavaScript lato client. Se l'URL viene
+
+recuperato con la sola azione "Ottieni contenuti dell'URL" si otterrà solo il
+markup HTML privo del risultato. Per ottenere il testo finale ci sono due
+possibilità:
+
+1. Usare "Ottieni contenuti della pagina web" e poi "Ottieni testo da input". In
+   questo modo gli script vengono eseguiti automaticamente e si riceve il testo
+   calcolato.
+2. Oppure aprire la pagina con "Mostra pagina web" (o "Apri URL" in Safari) e
+   successivamente utilizzare "Esegui JavaScript su pagina web" per restituire
+   `document.body.innerText`. Quest'ultima azione accetta soltanto un oggetto
+   "Pagina web di Safari"; se collegata direttamente all'output testuale di
+   "Ottieni contenuti della pagina web" comparirà l'errore di conversione da RTF.
+
+Esempio di flusso minimale (senza azioni Safari aggiuntive):
+
+1. "Ottieni contenuti della pagina web" con l'URL sopra indicato.
+2. "Ottieni testo da input" per estrarre il risultato calcolato.
+
+Se invece si preferisce eseguire manualmente lo script:
+
+1. "Mostra pagina web" con l'URL di `quick.html`.
+2. "Esegui JavaScript su pagina web" con `document.body.innerText`.
+
+### Guida passo passo (ELI5)
+
+Esempio con la sola azione "Ottieni contenuti della pagina web":
+
+1. Apri l'app **Comandi Rapidi** su iPhone e tocca **+** per crearne uno nuovo.
+2. Inserisci l'azione **Testo** e incolla l'URL di `quick.html` con i parametri desiderati (es. `https://stocabbo.github.io/mplus/quick.html?ora=08:30&out=all`).
+3. Aggiungi l'azione **Ottieni contenuti della pagina web** collegandola al campo "Testo" dell'URL.
+4. Inserisci **Ottieni testo da input** e infine **Mostra risultato**.
+
+Se vuoi invece eseguire manualmente lo script JavaScript:
+
+1. Dopo l'azione **Testo** aggiungi **Mostra pagina web** con l'URL.
+2. A seguire, inserisci **Esegui JavaScript su pagina web** con `document.body.innerText`.
+3. Concludi con **Mostra risultato** per visualizzare il testo.
+=======
 recuperato con la sola azione "Ottieni contenuti dell'URL" si riceverà solo il
 markup HTML privo del risultato. Perché il Comando Rapido ottenga il testo finale
 è necessario caricare la pagina con "Ottieni contenuti della pagina web" (che
@@ -67,9 +106,9 @@ Esempio di flusso minimale:
 5. L'azione restituirà il testo finale; puoi mostrarlo con **Mostra risultato** o copiarlo negli appunti.
 
 
+
 ## Note Aggiuntive
 
 Le indicazioni qui riportate facevano riferimento a problemi ora risolti (doppio
 manifest, `start_url` errato e commenti dei test). Il progetto è già aggiornato
 di conseguenza.
-
