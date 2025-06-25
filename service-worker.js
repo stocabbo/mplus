@@ -7,6 +7,8 @@ const ASSETS_TO_CACHE = [
   `${CACHE_PREFIX}/index.html`,
   `${CACHE_PREFIX}/style.css`,
   `${CACHE_PREFIX}/script.js`,
+  `${CACHE_PREFIX}/shortcut.html`,
+  `${CACHE_PREFIX}/shortcut.js`,
   `${CACHE_PREFIX}/manifest.json`,
   `${CACHE_PREFIX}/offline.html`,
   `${CACHE_PREFIX}/favicon.ico`,
