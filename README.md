@@ -41,3 +41,26 @@ Le indicazioni qui riportate facevano riferimento a problemi ora risolti (doppio
 manifest, `start_url` errato e commenti dei test). Il progetto è già aggiornato
 di conseguenza.
 
+
+## Integrazione Comandi Rapidi iOS
+
+Per ottenere l'orario di uscita tramite un comando rapido senza server esterni è disponibile la pagina `shortcut.html`.
+Esempi di richiesta:
+
+```
+https://<sito>/mplus/shortcut.html?ora=08:30&tipo=corta
+https://<sito>/mplus/shortcut.html?ora=08:30&tipo=corta&paragrafo=1
+```
+
+Parametri:
+- `ora` (obbligatorio) nel formato `HH:MM`.
+- `tipo` opzionale (`corta` o `lunga`, default `corta`).
+- `paragrafo=1` restituisce anche il testo di suggerimento.
+
+### Esempio di Comando Rapido
+
+1. Apri l'app **Comandi** su iOS e crea un nuovo comando.
+2. Aggiungi **Chiedi testo** per l'orario di ingresso.
+3. Inserisci **Ottieni contenuti da URL** con l'indirizzo `https://<sito>/mplus/shortcut.html?ora=[Risultato di Chiedi testo]&tipo=corta`.
+4. (Facoltativo) aggiungi `&paragrafo=1` per ottenere anche il suggerimento.
+5. Termina con **Mostra risultato** per visualizzare il testo restituito.
