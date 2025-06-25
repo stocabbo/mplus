@@ -12,6 +12,7 @@ MPLUS è una piccola applicazione web (PWA) per il calcolo dell'orario di uscita
 - **service-worker.js**: caching delle risorse per l'utilizzo offline.
 - **manifest.json**: definizione del manifest PWA (icone, colori, `start_url`, ecc.).
 - **offline.html**: pagina visualizzata in assenza di connettività.
+- **quick.html**: endpoint minimale per integrazione con Comandi Rapidi di iOS.
 
 ## Funzionamento Principale
 
@@ -34,6 +35,18 @@ Alla fine di `script.js` sono presenti tre funzioni di test (`testCalcolaBP`, `t
 ## Esecuzione Locale
 
 Non sono richiesti ambienti di build particolari. È sufficiente un server statico (o l'apertura diretta di `index.html`) per utilizzare l'applicazione. Per l'installazione su dispositivi mobili, assicurarsi che il file `manifest.json` e il Service Worker siano correttamente serviti.
+
+## Integrazione con Comandi Rapidi iOS
+
+È possibile interrogare il sito tramite l'URL `quick.html` fornendo i parametri:
+
+- `ora` (es. `08:30`)
+- `tipo` (`corta` o `lunga`, opzionale, predefinito `corta`)
+- `out` (`time` per ottenere solo l'uscita strategica oppure `all` per l'intero paragrafo)
+
+Esempio: `https://stocabbo.github.io/mplus/quick.html?ora=08:30&out=all`
+
+Il contenuto restituito è testo semplice, ideale per essere letto da un Comando Rapido.
 
 ## Note Aggiuntive
 

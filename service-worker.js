@@ -9,6 +9,7 @@ const ASSETS_TO_CACHE = [
   `${CACHE_PREFIX}/script.js`,
   `${CACHE_PREFIX}/manifest.json`,
   `${CACHE_PREFIX}/offline.html`,
+  `${CACHE_PREFIX}/quick.html`,
   `${CACHE_PREFIX}/favicon.ico`,
   `${CACHE_PREFIX}/icon-192.png`,
   `${CACHE_PREFIX}/icon-512.png`
