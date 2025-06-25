@@ -41,3 +41,40 @@ Le indicazioni qui riportate facevano riferimento a problemi ora risolti (doppio
 manifest, `start_url` errato e commenti dei test). Il progetto è già aggiornato
 di conseguenza.
 
+
+## API per Comandi Rapidi iOS
+
+È disponibile un piccolo server Node (`server.js`) che espone un endpoint `/api` utile a integrazioni con Comandi Rapidi.
+
+Esempio di richiesta:
+
+```
+GET /api?ora=08:30&tipo=corta        => "15:28 (EFF 6h20m, ACC 20 min)"
+GET /api?ora=08:30&tipo=corta&paragrafo=1
+    => "Uscita strategica: 15:28 (EFF 6h20m, ACC 20 min). 🍽️ Pausa di 30 min. Buono pasto ok."
+```
+
+Parametri:
+- `ora` (obbligatorio) nel formato `HH:MM`.
+- `tipo` opzionale (`corta` o `lunga`, default `corta`).
+- `paragrafo=1` restituisce anche il testo di suggerimento.
+
+Avvio locale:
+
+```
+node server.js
+```
+
+L'endpoint restituisce sempre testo semplice UTF-8 e può essere richiamato da uno Shortcut di iOS con l'azione "Ottieni contenuti da URL".
+
+
+## Configurazione Comandi Rapidi iOS
+
+1. Apri l'app **Comandi** su iPhone e crea un nuovo comando.
+2. Aggiungi un'azione **Chiedi testo** per inserire l'orario di ingresso (es. 08:30).
+3. Inserisci **Ottieni contenuti da URL** con il metodo `GET` e come URL:
+   `http://<server>/api?ora=[Risultato di Chiedi testo]&tipo=corta`.
+   Sostituisci `<server>` con l'indirizzo dove gira `server.js`.
+4. (Facoltativo) aggiungi `&paragrafo=1` per ricevere il testo completo.
+5. Termina con l'azione **Mostra risultato** per visualizzare la risposta.
+
