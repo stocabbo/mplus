@@ -41,3 +41,36 @@ Le indicazioni qui riportate facevano riferimento a problemi ora risolti (doppio
 manifest, `start_url` errato e commenti dei test). Il progetto è già aggiornato
 di conseguenza.
 
+
+## Integrazione Comandi Rapidi iOS
+
+Per usare MPLUS nei Comandi Rapidi esistono due possibilita'.
+
+### Pagina statica
+Richiama `shortcut.html` direttamente dal tuo comando rapido, senza server.
+Esempi:
+https://<sito>/mplus/shortcut.html?ora=08:30&tipo=corta
+https://<sito>/mplus/shortcut.html?ora=08:30&tipo=corta&paragrafo=1
+
+Parametri:
+- `ora` (obbligatorio) nel formato `HH:MM`.
+- `tipo` opzionale (`corta` o `lunga`, default `corta`).
+- `paragrafo=1` restituisce anche il testo di suggerimento.
+
+Per creare il comando rapido:
+1. Apri l'app **Comandi** e crea un nuovo comando.
+2. Aggiungi **Chiedi testo** per l'ora di ingresso.
+3. Inserisci **Ottieni contenuti da URL** con l'indirizzo `https://<sito>/mplus/shortcut.html?ora=[Risultato di Chiedi testo]&tipo=corta`.
+4. (Facoltativo) aggiungi `&paragrafo=1` per mostrare il testo completo.
+5. Termina con **Mostra risultato**.
+
+### API opzionale
+Se preferisci un server, puoi usare il vecchio file `server.js` ed esporre l'endpoint /api con gli stessi parametri. Non e' necessario per l'uso comune.
+Esempio:
+GET /api?ora=08:30&tipo=corta => "15:28 (EFF 6h20m, ACC 20 min)"
+
+```bash
+node server.js
+```
+
+L'endpoint restituisce testo semplice UTF-8 ed e' compatibile con la stessa configurazione dei Comandi Rapidi.
