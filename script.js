@@ -134,8 +134,9 @@ if (ingressoEl && toggleEl) {
     const urlParams = new URLSearchParams(window.location.search);
     const paramOra = urlParams.get("ora");
     const oraInput = document.getElementById('ora_ingresso');
-    if (paramOra && /^\d{2}:\d{2}$/.test(paramOra)) {
-      oraInput.value = paramOra;
+    if (paramOra && /^\d{1,2}:\d{2}$/.test(paramOra)) {
+      const [h, m] = paramOra.split(":");
+      oraInput.value = h.padStart(2, "0") + ":" + m;
     } else {
       const now = new Date();
       const hh = String(now.getHours()).padStart(2, '0');

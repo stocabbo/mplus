@@ -2,6 +2,7 @@
 
 ## Panoramica
 
+
 MPLUS è una piccola applicazione web (PWA) per il calcolo dell'orario di uscita ottimale dal lavoro. L'interfaccia è in italiano e include una modalità "giornata corta" e "giornata lunga". Al caricamento l'app può operare offline grazie al Service Worker e al manifest che permette l'installazione su dispositivi mobili.
 
 ## Struttura del progetto
@@ -38,9 +39,10 @@ Non sono richiesti ambienti di build particolari. È sufficiente un server stati
 
 ## Integrazione con Comandi Rapidi iOS
 
+
 È possibile interrogare il sito tramite l'URL `quick.html` fornendo i parametri:
 
-- `ora` (es. `08:30`)
+- `ora` (es. `08:30`). È consentito omettere lo zero iniziale (es. `8:30`)
 - `tipo` (`corta` o `lunga`, opzionale, predefinito `corta`)
 - `out` (`time` per ottenere solo l'uscita strategica oppure `all` per l'intero paragrafo)
 
