@@ -124,23 +124,27 @@ function aggiornaRisultati() {
   if (oraStrategica) startCountdown(oraStrategica);
 }
 
-document.getElementById('ora_ingresso').addEventListener('input', aggiornaRisultati);
-document.getElementById('toggle_giornata').addEventListener('change', aggiornaRisultati);
-window.addEventListener('DOMContentLoaded', () => {
-  requestNotificationPermission();
-  const urlParams = new URLSearchParams(window.location.search);
-  const paramOra = urlParams.get("ora");
-  const oraInput = document.getElementById('ora_ingresso');
-  if (paramOra && /^\d{2}:\d{2}$/.test(paramOra)) {
-    oraInput.value = paramOra;
-  } else {
-    const now = new Date();
-    const hh = String(now.getHours()).padStart(2, '0');
-    const mm = String(now.getMinutes()).padStart(2, '0');
-    oraInput.value = `${hh}:${mm}`;
-  }
-  aggiornaRisultati();
-});
+const ingressoEl = document.getElementById('ora_ingresso');
+const toggleEl = document.getElementById('toggle_giornata');
+if (ingressoEl && toggleEl) {
+  ingressoEl.addEventListener('input', aggiornaRisultati);
+  toggleEl.addEventListener('change', aggiornaRisultati);
+  window.addEventListener('DOMContentLoaded', () => {
+    requestNotificationPermission();
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramOra = urlParams.get("ora");
+    const oraInput = document.getElementById('ora_ingresso');
+    if (paramOra && /^\d{2}:\d{2}$/.test(paramOra)) {
+      oraInput.value = paramOra;
+    } else {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      oraInput.value = `${hh}:${mm}`;
+    }
+    aggiornaRisultati();
+  });
+}
 
 let countdownInterval;
 

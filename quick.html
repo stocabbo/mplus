@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>MPLUS Quick</title>
+</head>
+<body>
+  <pre id="result">In elaborazione...</pre>
+  <script src="script.js"></script>
+  <script>
+  (function(){
+    const params = new URLSearchParams(window.location.search);
+    const ora = params.get('ora');
+    const tipo = params.get('tipo') || 'corta';
+    const out = params.get('out') || 'time';
+
+    if(!ora){
+      document.getElementById('result').innerText = 'Parametro "ora" mancante. Esempio: ?ora=08:30&tipo=corta&out=time';
+      return;
+    }
+    const res = calcolaGiornata(tipo, timeToMinutes(ora));
+    let txt = '';
+    if(out === 'all'){
+      txt = 'Uscita per BP: ' + res.uscita_stimata + '\n' +
+            'Uscita strategica: ' + res.uscita_strategica + '\n' +
+            res.suggerimento;
+    } else {
+      txt = res.uscita_strategica;
+    }
+    document.body.innerText = txt;
+  })();
+  </script>
+</body>
+</html>
