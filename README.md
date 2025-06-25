@@ -46,7 +46,26 @@ Non sono richiesti ambienti di build particolari. È sufficiente un server stati
 
 Esempio: `https://stocabbo.github.io/mplus/quick.html?ora=08:30&out=all`
 
-Il contenuto restituito è testo semplice, ideale per essere letto da un Comando Rapido.
+La pagina `quick.html` esegue i calcoli con JavaScript lato client. Se l'URL viene
+recuperato con la sola azione "Ottieni contenuti dell'URL" si riceverà solo il
+markup HTML privo del risultato. Perché il Comando Rapido ottenga il testo finale
+è necessario caricare la pagina con "Ottieni contenuti della pagina web" (che
+esegue gli script) oppure usare "Esegui JavaScript su pagina web" e restituire
+`document.body.innerText`.
+
+Esempio di flusso minimale:
+
+1. "Ottieni contenuti della pagina web" con l'URL sopra indicato.
+2. "Esegui JavaScript su pagina web" con `document.body.innerText` come script.
+
+### Guida passo passo (ELI5)
+
+1. Apri l'app **Comandi Rapidi** su iPhone e tocca **+** per crearne uno nuovo.
+2. Inserisci l'azione **Testo** e incolla l'URL di `quick.html` con i parametri desiderati (es. `https://stocabbo.github.io/mplus/quick.html?ora=08:30&out=all`).
+3. Aggiungi l'azione **Ottieni contenuti della pagina web** collegandola al campo "Testo" dell'URL.
+4. Subito dopo inserisci **Esegui JavaScript su pagina web** e scrivi `document.body.innerText`.
+5. L'azione restituirà il testo finale; puoi mostrarlo con **Mostra risultato** o copiarlo negli appunti.
+
 
 ## Note Aggiuntive
 
