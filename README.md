@@ -42,16 +42,14 @@ manifest, `start_url` errato e commenti dei test). Il progetto è già aggiornat
 di conseguenza.
 
 
-## API per Comandi Rapidi iOS
+## Integrazione Comandi Rapidi iOS
 
-È disponibile un piccolo server Node (`server.js`) che espone un endpoint `/api` utile a integrazioni con Comandi Rapidi.
-
-Esempio di richiesta:
+Per ottenere l'orario di uscita tramite un comando rapido senza server esterni è disponibile la pagina `shortcut.html`.
+Esempi di richiesta:
 
 ```
-GET /api?ora=08:30&tipo=corta        => "15:28 (EFF 6h20m, ACC 20 min)"
-GET /api?ora=08:30&tipo=corta&paragrafo=1
-    => "Uscita strategica: 15:28 (EFF 6h20m, ACC 20 min). 🍽️ Pausa di 30 min. Buono pasto ok."
+https://<sito>/mplus/shortcut.html?ora=08:30&tipo=corta
+https://<sito>/mplus/shortcut.html?ora=08:30&tipo=corta&paragrafo=1
 ```
 
 Parametri:
@@ -59,22 +57,10 @@ Parametri:
 - `tipo` opzionale (`corta` o `lunga`, default `corta`).
 - `paragrafo=1` restituisce anche il testo di suggerimento.
 
-Avvio locale:
+### Esempio di Comando Rapido
 
-```
-node server.js
-```
-
-L'endpoint restituisce sempre testo semplice UTF-8 e può essere richiamato da uno Shortcut di iOS con l'azione "Ottieni contenuti da URL".
-
-
-## Configurazione Comandi Rapidi iOS
-
-1. Apri l'app **Comandi** su iPhone e crea un nuovo comando.
-2. Aggiungi un'azione **Chiedi testo** per inserire l'orario di ingresso (es. 08:30).
-3. Inserisci **Ottieni contenuti da URL** con il metodo `GET` e come URL:
-   `http://<server>/api?ora=[Risultato di Chiedi testo]&tipo=corta`.
-   Sostituisci `<server>` con l'indirizzo dove gira `server.js`.
-4. (Facoltativo) aggiungi `&paragrafo=1` per ricevere il testo completo.
-5. Termina con l'azione **Mostra risultato** per visualizzare la risposta.
-
+1. Apri l'app **Comandi** su iOS e crea un nuovo comando.
+2. Aggiungi **Chiedi testo** per l'orario di ingresso.
+3. Inserisci **Ottieni contenuti da URL** con l'indirizzo `https://<sito>/mplus/shortcut.html?ora=[Risultato di Chiedi testo]&tipo=corta`.
+4. (Facoltativo) aggiungi `&paragrafo=1` per ottenere anche il suggerimento.
+5. Termina con **Mostra risultato** per visualizzare il testo restituito.
