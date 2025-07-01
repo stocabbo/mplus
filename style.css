@@ -186,6 +186,10 @@ input:checked + .slider:before {
   justify-content: center;
 }
 
+.settings-panel[hidden] {
+  display: none;
+}
+
 .settings-content {
   background: #fff;
   padding: 20px;
