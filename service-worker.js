@@ -12,7 +12,7 @@ const ASSETS_TO_CACHE = [
   `${CACHE_PREFIX}/quick.html`,
   `${CACHE_PREFIX}/favicon.ico`,
   `${CACHE_PREFIX}/icon-192.png`,
-  `${CACHE_PREFIX}/icon-512.png`
+  `${CACHE_PREFIX}/icon-512.png`,
 ];
 
 self.addEventListener('install', event => {
