@@ -9,8 +9,10 @@ function loadSettings() {
   const saved = localStorage.getItem('mplus_settings');
   const obj = saved ? { ...defaultSettings, ...JSON.parse(saved) } : { ...defaultSettings };
   obj.pausaMinima = Math.min(Math.max(obj.pausaMinima, 20), 120);
+
   obj.extraCorta = Math.min(Math.max(obj.extraCorta, 0), 30);
   obj.recuperoLunga = Math.min(Math.max(obj.recuperoLunga, 0), 30);
+
   return obj;
 }
 
@@ -18,8 +20,10 @@ let settings = loadSettings();
 
 function saveSettings() {
   settings.pausaMinima = Math.min(Math.max(settings.pausaMinima, 20), 120);
+
   settings.extraCorta = Math.min(Math.max(settings.extraCorta, 0), 30);
   settings.recuperoLunga = Math.min(Math.max(settings.recuperoLunga, 0), 30);
+
   localStorage.setItem('mplus_settings', JSON.stringify(settings));
 }
 
@@ -254,9 +258,11 @@ function initSettings() {
   });
 
   save.addEventListener('click', () => {
+
     settings.extraCorta = Math.min(Math.max(parseInt(extra.value) || 0, 0), 30);
     settings.recuperoLunga = Math.min(Math.max(parseInt(rec.value) || 0, 0), 30);
     settings.pausaMinima = Math.min(Math.max(parseInt(pausa.value) || 0, 20), 120);
+
     saveSettings();
     panel.hidden = true;
     aggiornaRisultati();

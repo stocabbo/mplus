@@ -34,8 +34,10 @@ Il `service-worker.js` memorizza in cache le risorse di base. Se una richiesta f
 
 Attraverso l'icona a forma di ingranaggio è possibile definire:
 
+
 - i minuti di extra da accumulare nella giornata corta (default 20, max 30);
 - i minuti di anticipo/recupero nella giornata lunga (default 30, max 30);
+
 - la durata minima della pausa pranzo (default 30, valori ammessi 20-120).
 
 ## Regole di Calcolo
@@ -44,6 +46,8 @@ Attraverso l'icona a forma di ingranaggio è possibile definire:
 - L'uscita massima consentita è alle 19:30.
 - Se la pausa pranzo è inferiore a 30 minuti, ai fini del computo vengono comunque sottratti 30 minuti di lavoro.
 - L'accumulo massimo ottenibile è 30 minuti; valori superiori vengono ridotti e segnalati.
+
+
 - Per maturare il buono pasto servono almeno 20 minuti di pausa nell'arco di 6h1min di lavoro effettivo e almeno 30 minuti di attività dopo il rientro.
 
 Oltre ai calcoli di uscita, l'app indica l'orario consigliato per la pausa pranzo e per il rientro.
