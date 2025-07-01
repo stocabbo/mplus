@@ -9,6 +9,10 @@ function loadSettings() {
   const saved = localStorage.getItem('mplus_settings');
   const obj = saved ? { ...defaultSettings, ...JSON.parse(saved) } : { ...defaultSettings };
   obj.pausaMinima = Math.min(Math.max(obj.pausaMinima, 20), 120);
+
+  obj.extraCorta = Math.min(Math.max(obj.extraCorta, 0), 30);
+  obj.recuperoLunga = Math.min(Math.max(obj.recuperoLunga, 0), 30);
+
   return obj;
 }
 
@@ -16,6 +20,10 @@ let settings = loadSettings();
 
 function saveSettings() {
   settings.pausaMinima = Math.min(Math.max(settings.pausaMinima, 20), 120);
+
+  settings.extraCorta = Math.min(Math.max(settings.extraCorta, 0), 30);
+  settings.recuperoLunga = Math.min(Math.max(settings.recuperoLunga, 0), 30);
+
   localStorage.setItem('mplus_settings', JSON.stringify(settings));
 }
 
@@ -58,7 +66,7 @@ function calcolaGiornata(tipo, IN1) {
   const ritardo = Math.max(0, IN1 - 540);
   if (tipo === "corta") accumulo_dichiarato += ritardo;
 
-  const max_totale = 29;
+  const max_totale = 30;
   const accumulo_effettivo = Math.min(accumulo_dichiarato, max_totale);
   const target_eff = 360 + accumulo_effettivo;
   let uscita_strategica = ingresso + pausaEff + target_eff;
@@ -80,7 +88,7 @@ function calcolaGiornata(tipo, IN1) {
       const ecc = ore_eff_strategica - durata_teorica;
         stato = "yellow";
         badge = `↪︎ +${ecc} min`;
-        suggerimento = "⚠️ Massimo 29 min raggiunto, accumulo ridotto.";
+        suggerimento = "⚠️ Massimo 30 min raggiunto, accumulo ridotto.";
     } else {
       const ecc = ore_eff_strategica - durata_teorica;
       if (ecc > 0) {
@@ -148,7 +156,7 @@ function aggiornaRisultati() {
       <div class="title">${tipoGiornata.charAt(0).toUpperCase() + tipoGiornata.slice(1)} <span>${result.badge}</span></div>
       <div class="time">🕓 Uscita per BP: ${result.uscita_stimata}</div>
       <div class="time">🎯 Uscita Strategica: ${result.uscita_strategica}</div>
-      <div class="time">🍽️ Pausa: ${result.pausa_inizio} - ${result.pausa_fine}</div>
+      <div class="time">🍽️ Orario pausa suggerita: ${result.pausa_inizio} - ${result.pausa_fine}</div>
       <div class="time">💡 ${result.suggerimento}</div>
     </div>
   `;
@@ -250,10 +258,11 @@ function initSettings() {
   });
 
   save.addEventListener('click', () => {
-    settings.extraCorta = parseInt(extra.value) || 0;
-    settings.recuperoLunga = parseInt(rec.value) || 0;
-    settings.pausaMinima = parseInt(pausa.value) || 0;
-    settings.pausaMinima = Math.min(Math.max(settings.pausaMinima, 20), 120);
+
+    settings.extraCorta = Math.min(Math.max(parseInt(extra.value) || 0, 0), 30);
+    settings.recuperoLunga = Math.min(Math.max(parseInt(rec.value) || 0, 0), 30);
+    settings.pausaMinima = Math.min(Math.max(parseInt(pausa.value) || 0, 20), 120);
+
     saveSettings();
     panel.hidden = true;
     aggiornaRisultati();
@@ -291,7 +300,7 @@ function testStrategico() {
   console.group("🔍 Test calcolaGiornata()");
   const r1 = calcolaGiornata("corta", timeToMinutes("09:32"));
   console.assert(r1.uscita_stimata.startsWith("16:03"), "❌ Test 1 stimata: expected 16:03");
-  console.assert(r1.uscita_strategica.startsWith("16:22") === false, "✅ Test 2 strategica: acc e rec superano 29 min, ridotto");
+  console.assert(r1.uscita_strategica.startsWith("16:22") === false, "✅ Test 2 strategica: acc e rec superano 30 min, ridotto");
 
   const r2 = calcolaGiornata("lunga", timeToMinutes("11:49"));
   console.assert(r2.uscita_strategica <= "19:30", "❌ Test 3: limite orario massimo superato");
