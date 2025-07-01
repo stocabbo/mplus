@@ -3,7 +3,7 @@
 ## Panoramica
 
 
-MPLUS è una piccola applicazione web (PWA) per il calcolo dell'orario di uscita ottimale dal lavoro. L'interfaccia è in italiano e include una modalità "giornata corta" e "giornata lunga". Al caricamento l'app può operare offline grazie al Service Worker e al manifest che permette l'installazione su dispositivi mobili.
+MPLUS è una piccola applicazione web (PWA) per il calcolo dell'orario di uscita ottimale dal lavoro. L'interfaccia è in italiano e include una modalità "giornata corta" e "giornata lunga". Al caricamento l'app può operare offline grazie al Service Worker e al manifest che permette l'installazione su dispositivi mobili. Oltre all'orario di uscita, l'app suggerisce anche quando iniziare e terminare la pausa pranzo e consente di personalizzare i minuti extra tramite l'icona a forma di ingranaggio.
 
 ## Struttura del progetto
 
@@ -21,6 +21,7 @@ La funzione `calcolaGiornata(tipo, IN1)` riceve il tipo di giornata ("corta" o "
 
 - `uscita_stimata`: orario minimo per ottenere il buono pasto e relativo accumulo/recupero.
 - `uscita_strategica`: orario consigliato per ottenere il massimo accumulo nel rispetto dei limiti.
+- `pausa_inizio` e `pausa_fine`: orari suggeriti per la pausa pranzo.
 - `suggerimento`: messaggio per l'utente.
 
 Il file `script.js` gestisce inoltre l'aggiornamento dinamico dei risultati e il countdown fino all'uscita strategica con eventuali notifiche.
@@ -28,6 +29,18 @@ Il file `script.js` gestisce inoltre l'aggiornamento dinamico dei risultati e il
 ## Modalità Offline
 
 Il `service-worker.js` memorizza in cache le risorse di base. Se una richiesta fallisce, viene mostrata la pagina `offline.html`.
+
+## Impostazioni Personalizzate
+
+Attraverso l'icona a forma di ingranaggio è possibile definire:
+
+- i minuti di extra da accumulare nella giornata corta (default 20);
+- i minuti di anticipo/recupero nella giornata lunga (default 30);
+- la durata minima della pausa pranzo (default 30).
+
+Oltre ai calcoli di uscita, l'app indica l'orario consigliato per la pausa pranzo e per il rientro.
+
+Le preferenze vengono salvate in locale e rimangono attive ai successivi avvii.
 
 ## Test
 
@@ -87,25 +100,6 @@ Se vuoi invece eseguire manualmente lo script JavaScript:
 1. Dopo l'azione **Testo** aggiungi **Mostra pagina web** con l'URL.
 2. A seguire, inserisci **Esegui JavaScript su pagina web** con `document.body.innerText`.
 3. Concludi con **Mostra risultato** per visualizzare il testo.
-=======
-recuperato con la sola azione "Ottieni contenuti dell'URL" si riceverà solo il
-markup HTML privo del risultato. Perché il Comando Rapido ottenga il testo finale
-è necessario caricare la pagina con "Ottieni contenuti della pagina web" (che
-esegue gli script) oppure usare "Esegui JavaScript su pagina web" e restituire
-`document.body.innerText`.
-
-Esempio di flusso minimale:
-
-1. "Ottieni contenuti della pagina web" con l'URL sopra indicato.
-2. "Esegui JavaScript su pagina web" con `document.body.innerText` come script.
-
-### Guida passo passo (ELI5)
-
-1. Apri l'app **Comandi Rapidi** su iPhone e tocca **+** per crearne uno nuovo.
-2. Inserisci l'azione **Testo** e incolla l'URL di `quick.html` con i parametri desiderati (es. `https://stocabbo.github.io/mplus/quick.html?ora=08:30&out=all`).
-3. Aggiungi l'azione **Ottieni contenuti della pagina web** collegandola al campo "Testo" dell'URL.
-4. Subito dopo inserisci **Esegui JavaScript su pagina web** e scrivi `document.body.innerText`.
-5. L'azione restituirà il testo finale; puoi mostrarlo con **Mostra risultato** o copiarlo negli appunti.
 
 
 
