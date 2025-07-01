@@ -7,12 +7,15 @@ const defaultSettings = {
 
 function loadSettings() {
   const saved = localStorage.getItem('mplus_settings');
-  return saved ? { ...defaultSettings, ...JSON.parse(saved) } : { ...defaultSettings };
+  const obj = saved ? { ...defaultSettings, ...JSON.parse(saved) } : { ...defaultSettings };
+  obj.pausaMinima = Math.min(Math.max(obj.pausaMinima, 20), 120);
+  return obj;
 }
 
 let settings = loadSettings();
 
 function saveSettings() {
+  settings.pausaMinima = Math.min(Math.max(settings.pausaMinima, 20), 120);
   localStorage.setItem('mplus_settings', JSON.stringify(settings));
 }
 
@@ -43,9 +46,12 @@ function formatEFFRECACC(oreEff, acc) {
 
 function calcolaGiornata(tipo, IN1) {
   const pausa = settings.pausaMinima;
+  const pausaEff = Math.max(pausa, 30);
+  const pausaBP = Math.max(pausa, 20);
   const ingresso = Math.max(IN1, 465); // minimo 07:45
   const durata_teorica = tipo === "corta" ? 360 : 540;
-  const uscita_bp = ingresso + pausa + 361;
+  let uscita_bp = ingresso + pausaBP + 361;
+  uscita_bp = Math.min(uscita_bp, 1170);
   const { inizio: pausaStart, fine: pausaEnd } = calcolaPausa(ingresso);
 
   let accumulo_dichiarato = tipo === "corta" ? settings.extraCorta : 0;
@@ -55,7 +61,7 @@ function calcolaGiornata(tipo, IN1) {
   const max_totale = 29;
   const accumulo_effettivo = Math.min(accumulo_dichiarato, max_totale);
   const target_eff = 360 + accumulo_effettivo;
-  let uscita_strategica = ingresso + pausa + target_eff;
+  let uscita_strategica = ingresso + pausaEff + target_eff;
   let ore_eff_strategica = target_eff;
 
   let stato = "green";
@@ -65,7 +71,7 @@ function calcolaGiornata(tipo, IN1) {
   if (tipo === "corta") {
     if (uscita_strategica > 1170) {
       uscita_strategica = 1170;
-      ore_eff_strategica = uscita_strategica - ingresso - pausa;
+      ore_eff_strategica = uscita_strategica - ingresso - pausaEff;
       const accumulo = Math.max(0, ore_eff_strategica - durata_teorica);
         stato = "red";
         badge = "⚠️ 19:30";
@@ -82,13 +88,14 @@ function calcolaGiornata(tipo, IN1) {
         badge = `↪︎ +${ecc} min`;
         suggerimento = `⏱️ Esci alle ${minutesToTime(uscita_strategica)} per +${ecc} min.`;
       } else {
-        suggerimento = `🍽️ Pausa di ${settings.pausaMinima} min. Buono pasto ok.`;
+        const bpMsg = settings.pausaMinima >= 20 ? 'Buono pasto ok.' : 'Pausa troppo breve per BP.';
+        suggerimento = `🍽️ Pausa di ${settings.pausaMinima} min. ${bpMsg}`;
       }
     }
   } else {
-    const uscita_normale = ingresso + pausa + durata_teorica;
+    const uscita_normale = ingresso + pausaEff + durata_teorica;
     uscita_strategica = Math.min(uscita_normale - settings.recuperoLunga, 1170);
-    ore_eff_strategica = uscita_strategica - ingresso - pausa;
+    ore_eff_strategica = uscita_strategica - ingresso - pausaEff;
 
     if (uscita_normale > 1170) {
         stato = "red";
@@ -103,11 +110,12 @@ function calcolaGiornata(tipo, IN1) {
         badge = `↪︎ -${settings.recuperoLunga} min`;
         suggerimento = `↪️ Uscita normale ${minutesToTime(uscita_normale)} se vuoi evitare anticipo.`;
     } else {
-        suggerimento = `🍽️ Pausa di ${settings.pausaMinima} min. Buono pasto ok.`;
+        const bpMsg = settings.pausaMinima >= 20 ? 'Buono pasto ok.' : 'Pausa troppo breve per BP.';
+        suggerimento = `🍽️ Pausa di ${settings.pausaMinima} min. ${bpMsg}`;
     }
   }
 
-  const ore_eff_bp = uscita_bp - ingresso - pausa;
+  const ore_eff_bp = uscita_bp - ingresso - pausaEff;
 
   return {
     tipo,
@@ -245,6 +253,7 @@ function initSettings() {
     settings.extraCorta = parseInt(extra.value) || 0;
     settings.recuperoLunga = parseInt(rec.value) || 0;
     settings.pausaMinima = parseInt(pausa.value) || 0;
+    settings.pausaMinima = Math.min(Math.max(settings.pausaMinima, 20), 120);
     saveSettings();
     panel.hidden = true;
     aggiornaRisultati();
