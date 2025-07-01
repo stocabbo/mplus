@@ -1,4 +1,21 @@
 
+const defaultSettings = {
+  extraCorta: 20,
+  recuperoLunga: 30,
+  pausaMinima: 30
+};
+
+function loadSettings() {
+  const saved = localStorage.getItem('mplus_settings');
+  return saved ? { ...defaultSettings, ...JSON.parse(saved) } : { ...defaultSettings };
+}
+
+let settings = loadSettings();
+
+function saveSettings() {
+  localStorage.setItem('mplus_settings', JSON.stringify(settings));
+}
+
 function timeToMinutes(timeStr) {
   const [h, m] = timeStr.split(':').map(Number);
   return h * 60 + m;
@@ -8,6 +25,11 @@ function minutesToTime(mins) {
   const h = Math.floor(mins / 60);
   const m = mins % 60;
   return h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0');
+}
+
+function calcolaPausa(ingresso) {
+  const start = Math.max(ingresso + 240, 720);
+  return { inizio: start, fine: start + settings.pausaMinima };
 }
 
 function formatEFFRECACC(oreEff, acc) {
@@ -20,12 +42,13 @@ function formatEFFRECACC(oreEff, acc) {
 }
 
 function calcolaGiornata(tipo, IN1) {
-  const pausa = 30;
+  const pausa = settings.pausaMinima;
   const ingresso = Math.max(IN1, 465); // minimo 07:45
   const durata_teorica = tipo === "corta" ? 360 : 540;
   const uscita_bp = ingresso + pausa + 361;
+  const { inizio: pausaStart, fine: pausaEnd } = calcolaPausa(ingresso);
 
-  let accumulo_dichiarato = tipo === "corta" ? 20 : 0;
+  let accumulo_dichiarato = tipo === "corta" ? settings.extraCorta : 0;
   const ritardo = Math.max(0, IN1 - 540);
   if (tipo === "corta") accumulo_dichiarato += ritardo;
 
@@ -59,12 +82,12 @@ function calcolaGiornata(tipo, IN1) {
         badge = `↪︎ +${ecc} min`;
         suggerimento = `⏱️ Esci alle ${minutesToTime(uscita_strategica)} per +${ecc} min.`;
       } else {
-        suggerimento = "🍽️ Pausa di 30 min. Buono pasto ok.";
+        suggerimento = `🍽️ Pausa di ${settings.pausaMinima} min. Buono pasto ok.`;
       }
     }
   } else {
     const uscita_normale = ingresso + pausa + durata_teorica;
-    uscita_strategica = Math.min(uscita_normale - 30, 1170);
+    uscita_strategica = Math.min(uscita_normale - settings.recuperoLunga, 1170);
     ore_eff_strategica = uscita_strategica - ingresso - pausa;
 
     if (uscita_normale > 1170) {
@@ -77,10 +100,10 @@ function calcolaGiornata(tipo, IN1) {
         suggerimento = "⚠️ Chiusura 19:30: pianifica un recupero.";
     } else if (ore_eff_strategica >= 510) {
         stato = "yellow";
-        badge = "↪︎ -30 min";
+        badge = `↪︎ -${settings.recuperoLunga} min`;
         suggerimento = `↪️ Uscita normale ${minutesToTime(uscita_normale)} se vuoi evitare anticipo.`;
     } else {
-        suggerimento = "🍽️ Pausa di 30 min. Buono pasto ok.";
+        suggerimento = `🍽️ Pausa di ${settings.pausaMinima} min. Buono pasto ok.`;
     }
   }
 
@@ -92,6 +115,8 @@ function calcolaGiornata(tipo, IN1) {
     badge,
     uscita_stimata: minutesToTime(uscita_bp) + " " + formatEFFRECACC(ore_eff_bp, 0),
     uscita_strategica: minutesToTime(uscita_strategica) + " " + formatEFFRECACC(ore_eff_strategica, Math.max(0, ore_eff_strategica - durata_teorica)),
+    pausa_inizio: minutesToTime(pausaStart),
+    pausa_fine: minutesToTime(pausaEnd),
     suggerimento
   };
 }
@@ -115,6 +140,7 @@ function aggiornaRisultati() {
       <div class="title">${tipoGiornata.charAt(0).toUpperCase() + tipoGiornata.slice(1)} <span>${result.badge}</span></div>
       <div class="time">🕓 Uscita per BP: ${result.uscita_stimata}</div>
       <div class="time">🎯 Uscita Strategica: ${result.uscita_strategica}</div>
+      <div class="time">🍽️ Pausa: ${result.pausa_inizio} - ${result.pausa_fine}</div>
       <div class="time">💡 ${result.suggerimento}</div>
     </div>
   `;
@@ -144,6 +170,7 @@ if (ingressoEl && toggleEl) {
       oraInput.value = `${hh}:${mm}`;
     }
     aggiornaRisultati();
+    initSettings();
   });
 }
 
@@ -196,6 +223,36 @@ function playPingSound() {
     audio.currentTime = 0;
     audio.play().catch(() => {});
   }
+}
+
+function initSettings() {
+  const btn = document.getElementById('settings_btn');
+  const panel = document.getElementById('settings_panel');
+  if (!btn || !panel) return;
+  const extra = document.getElementById('opt_extra_corta');
+  const rec = document.getElementById('opt_recupero_lunga');
+  const pausa = document.getElementById('opt_pausa');
+  const save = document.getElementById('save_settings');
+
+  btn.addEventListener('click', () => {
+    extra.value = settings.extraCorta;
+    rec.value = settings.recuperoLunga;
+    pausa.value = settings.pausaMinima;
+    panel.hidden = false;
+  });
+
+  save.addEventListener('click', () => {
+    settings.extraCorta = parseInt(extra.value) || 0;
+    settings.recuperoLunga = parseInt(rec.value) || 0;
+    settings.pausaMinima = parseInt(pausa.value) || 0;
+    saveSettings();
+    panel.hidden = true;
+    aggiornaRisultati();
+  });
+
+  panel.addEventListener('click', e => {
+    if (e.target === panel) panel.hidden = true;
+  });
 }
 
 
