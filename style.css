@@ -180,6 +180,7 @@ input:checked + .slider:before {
   width: 24px;
   height: 24px;
   display: block;
+
 }
 
 .settings-panel {
@@ -252,8 +253,10 @@ input:checked + .slider:before {
     background: #1e1e1e;
   }
 
+
   .settings-btn {
     color: #eee;
   }
+
 }
 
