@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'mplus-cache-v2';
+const CACHE_NAME = 'mplus-cache-v3';
 const CACHE_PREFIX = '/mplus';
 
 const ASSETS_TO_CACHE = [
@@ -7,6 +7,8 @@ const ASSETS_TO_CACHE = [
   `${CACHE_PREFIX}/index.html`,
   `${CACHE_PREFIX}/style.css`,
   `${CACHE_PREFIX}/script.js`,
+  `${CACHE_PREFIX}/planner.html`,
+  `${CACHE_PREFIX}/planner.js`,
   `${CACHE_PREFIX}/manifest.json`,
   `${CACHE_PREFIX}/offline.html`,
   `${CACHE_PREFIX}/quick.html`,
