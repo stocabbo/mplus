@@ -17,13 +17,21 @@
   <meta name="theme-color" content="#007aff">
 </head>
 <body>
-  <div class="phone">
-    <h1>Calcolo Giornaliero MPLUS</h1>
-    <button id="settings_btn" class="settings-btn" aria-label="Impostazioni">⚙️</button>
+  <main class="phone">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">MPLUS</p>
+        <h1>Organizza la giornata</h1>
+      </div>
+      <button id="settings_btn" class="icon-btn" type="button" aria-label="Apri impostazioni" aria-haspopup="dialog">⚙️</button>
+    </header>
 
     <div class="input-group">
       <label for="ora_ingresso">Ora ingresso (HH:MM)</label>
-      <input type="time" id="ora_ingresso">
+      <div class="input-row">
+        <input type="time" id="ora_ingresso" required>
+        <button id="set_now" class="secondary-btn" type="button">Adesso</button>
+      </div>
     </div>
 
     <div class="toggle-group">
@@ -34,13 +42,16 @@
       <span id="toggle_label">Corta</span>
     </div>
 
-    <div id="output" class="result-cards"></div>
-<div id="countdown" class="countdown"></div>
-  </div>
+    <div id="output" class="result-cards" aria-live="polite"></div>
+    <div id="countdown" class="countdown" aria-live="off"></div>
+    <button id="share_result" class="share-btn" type="button" hidden>Condividi riepilogo</button>
+    <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+  </main>
 
-  <div id="settings_panel" class="settings-panel" hidden>
-    <div class="settings-content">
-      <h2>Impostazioni</h2>
+  <div id="settings_panel" class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings_title" hidden>
+    <div class="settings-content" tabindex="-1">
+      <button id="close_settings" class="close-btn" type="button" aria-label="Chiudi impostazioni">×</button>
+      <h2 id="settings_title">Impostazioni</h2>
       <label>Extra giornata corta (min)
         <input type="number" id="opt_extra_corta" min="0">
       </label>
@@ -50,12 +61,15 @@
       <label>Pausa pranzo (min)
         <input type="number" id="opt_pausa" min="20" max="120">
       </label>
-      <button id="save_settings">Salva</button>
+      <div class="settings-actions">
+        <button id="reset_settings" class="secondary-btn" type="button">Ripristina</button>
+        <button id="save_settings" class="primary-btn" type="button">Salva</button>
+      </div>
     </div>
   </div>
 
   <script src="script.js"></script>
-<audio id="ping" src="ping.mp3" preload="auto"></audio>
+  <audio id="ping" src="ping.mp3" preload="auto"></audio>
 
 
 <script>

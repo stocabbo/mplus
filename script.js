@@ -6,8 +6,13 @@ const defaultSettings = {
 };
 
 function loadSettings() {
-  const saved = localStorage.getItem('mplus_settings');
-  const obj = saved ? { ...defaultSettings, ...JSON.parse(saved) } : { ...defaultSettings };
+  let savedSettings = {};
+  try {
+    savedSettings = JSON.parse(localStorage.getItem('mplus_settings')) || {};
+  } catch (error) {
+    console.warn('Impostazioni salvate non valide, uso i valori predefiniti.', error);
+  }
+  const obj = { ...defaultSettings, ...savedSettings };
   obj.pausaMinima = Math.min(Math.max(obj.pausaMinima, 20), 120);
   return obj;
 }
@@ -25,8 +30,9 @@ function timeToMinutes(timeStr) {
 }
 
 function minutesToTime(mins) {
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
+  const normalized = ((mins % 1440) + 1440) % 1440;
+  const h = Math.floor(normalized / 60);
+  const m = normalized % 60;
   return h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0');
 }
 
@@ -73,14 +79,14 @@ function calcolaGiornata(tipo, IN1) {
       uscita_strategica = 1170;
       ore_eff_strategica = uscita_strategica - ingresso - pausaEff;
       const accumulo = Math.max(0, ore_eff_strategica - durata_teorica);
-        stato = "red";
-        badge = "⚠️ 19:30";
-        suggerimento = `⚠️ Chiusura 19:30: accumulo max ${accumulo} min.`;
+      stato = "red";
+      badge = "⚠️ 19:30";
+      suggerimento = `⚠️ Chiusura 19:30: accumulo max ${accumulo} min.`;
     } else if (accumulo_dichiarato > max_totale) {
       const ecc = ore_eff_strategica - durata_teorica;
-        stato = "yellow";
-        badge = `↪︎ +${ecc} min`;
-        suggerimento = "⚠️ Massimo 29 min raggiunto, accumulo ridotto.";
+      stato = "yellow";
+      badge = `↪︎ +${ecc} min`;
+      suggerimento = "⚠️ Massimo 29 min raggiunto, accumulo ridotto.";
     } else {
       const ecc = ore_eff_strategica - durata_teorica;
       if (ecc > 0) {
@@ -98,20 +104,20 @@ function calcolaGiornata(tipo, IN1) {
     ore_eff_strategica = uscita_strategica - ingresso - pausaEff;
 
     if (uscita_normale > 1170) {
-        stato = "red";
-        badge = "⚠️ 19:30";
-        suggerimento = "⚠️ Chiusura 19:30: pianifica un recupero.";
+      stato = "red";
+      badge = "⚠️ 19:30";
+      suggerimento = "⚠️ Chiusura 19:30: pianifica un recupero.";
     } else if (uscita_bp >= 1170) {
-        stato = "red";
-        badge = "⚠️ 19:30";
-        suggerimento = "⚠️ Chiusura 19:30: pianifica un recupero.";
+      stato = "red";
+      badge = "⚠️ 19:30";
+      suggerimento = "⚠️ Chiusura 19:30: pianifica un recupero.";
     } else if (ore_eff_strategica >= 510) {
-        stato = "yellow";
-        badge = `↪︎ -${settings.recuperoLunga} min`;
-        suggerimento = `↪️ Uscita normale ${minutesToTime(uscita_normale)} se vuoi evitare anticipo.`;
+      stato = "yellow";
+      badge = `↪︎ -${settings.recuperoLunga} min`;
+      suggerimento = `↪️ Uscita normale ${minutesToTime(uscita_normale)} se vuoi evitare anticipo.`;
     } else {
-        const bpMsg = settings.pausaMinima >= 20 ? 'Buono pasto ok.' : 'Pausa troppo breve per BP.';
-        suggerimento = `🍽️ Pausa di ${settings.pausaMinima} min. ${bpMsg}`;
+      const bpMsg = settings.pausaMinima >= 20 ? 'Buono pasto ok.' : 'Pausa troppo breve per BP.';
+      suggerimento = `🍽️ Pausa di ${settings.pausaMinima} min. ${bpMsg}`;
     }
   }
 
@@ -137,6 +143,8 @@ function aggiornaRisultati() {
 
   if (!oraIngresso) {
     document.getElementById('output').innerHTML = "";
+    document.getElementById('share_result').hidden = true;
+    document.getElementById('countdown').textContent = '';
     return;
   }
 
@@ -154,6 +162,8 @@ function aggiornaRisultati() {
   `;
 
   document.getElementById('output').innerHTML = outputHTML;
+  document.getElementById('share_result').hidden = false;
+  localStorage.setItem('mplus_last_entry', JSON.stringify({ ora: oraIngresso, tipo: tipoGiornata }));
   const oraStrategica = estraiOrario(result.uscita_strategica);
   if (oraStrategica) startCountdown(oraStrategica);
 }
@@ -168,9 +178,13 @@ if (ingressoEl && toggleEl) {
     const urlParams = new URLSearchParams(window.location.search);
     const paramOra = urlParams.get("ora");
     const oraInput = document.getElementById('ora_ingresso');
-    if (paramOra && /^\d{1,2}:\d{2}$/.test(paramOra)) {
+    const lastEntry = loadLastEntry();
+    if (paramOra && isValidTime(paramOra)) {
       const [h, m] = paramOra.split(":");
       oraInput.value = h.padStart(2, "0") + ":" + m;
+    } else if (lastEntry) {
+      oraInput.value = lastEntry.ora;
+      toggleEl.checked = lastEntry.tipo === 'lunga';
     } else {
       const now = new Date();
       const hh = String(now.getHours()).padStart(2, '0');
@@ -179,7 +193,24 @@ if (ingressoEl && toggleEl) {
     }
     aggiornaRisultati();
     initSettings();
+    initQuickActions();
   });
+}
+
+function isValidTime(value) {
+  if (!/^\d{1,2}:\d{2}$/.test(value)) return false;
+  const [hours, minutes] = value.split(':').map(Number);
+  return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
+}
+
+function loadLastEntry() {
+  try {
+    const entry = JSON.parse(localStorage.getItem('mplus_last_entry'));
+    return entry && isValidTime(entry.ora) && ['corta', 'lunga'].includes(entry.tipo) ? entry : null;
+  } catch (error) {
+    console.warn('Ultimo ingresso salvato non valido.', error);
+    return null;
+  }
 }
 
 let countdownInterval;
@@ -241,12 +272,23 @@ function initSettings() {
   const rec = document.getElementById('opt_recupero_lunga');
   const pausa = document.getElementById('opt_pausa');
   const save = document.getElementById('save_settings');
+  const close = document.getElementById('close_settings');
+  const reset = document.getElementById('reset_settings');
+  const content = panel.querySelector('.settings-content');
+  let previousFocus;
+
+  function closePanel() {
+    panel.hidden = true;
+    previousFocus?.focus();
+  }
 
   btn.addEventListener('click', () => {
+    previousFocus = document.activeElement;
     extra.value = settings.extraCorta;
     rec.value = settings.recuperoLunga;
     pausa.value = settings.pausaMinima;
     panel.hidden = false;
+    content.focus();
   });
 
   save.addEventListener('click', () => {
@@ -255,12 +297,53 @@ function initSettings() {
     settings.pausaMinima = parseInt(pausa.value) || 0;
     settings.pausaMinima = Math.min(Math.max(settings.pausaMinima, 20), 120);
     saveSettings();
-    panel.hidden = true;
+    closePanel();
     aggiornaRisultati();
   });
 
+  reset.addEventListener('click', () => {
+    extra.value = defaultSettings.extraCorta;
+    rec.value = defaultSettings.recuperoLunga;
+    pausa.value = defaultSettings.pausaMinima;
+  });
+
+  close.addEventListener('click', closePanel);
+
   panel.addEventListener('click', e => {
-    if (e.target === panel) panel.hidden = true;
+    if (e.target === panel) closePanel();
+  });
+
+  panel.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePanel();
+  });
+}
+
+function initQuickActions() {
+  const nowButton = document.getElementById('set_now');
+  const shareButton = document.getElementById('share_result');
+  const feedback = document.getElementById('feedback');
+
+  nowButton.addEventListener('click', () => {
+    const now = new Date();
+    ingressoEl.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    aggiornaRisultati();
+  });
+
+  shareButton.addEventListener('click', async () => {
+    const card = document.querySelector('.result-card');
+    if (!card) return;
+    const text = card.innerText.replace(/\n+/g, '\n').trim();
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Riepilogo MPLUS', text });
+        feedback.textContent = 'Riepilogo condiviso.';
+      } else {
+        await navigator.clipboard.writeText(text);
+        feedback.textContent = 'Riepilogo copiato negli appunti.';
+      }
+    } catch (error) {
+      if (error.name !== 'AbortError') feedback.textContent = 'Non è stato possibile condividere il riepilogo.';
+    }
   });
 }
 
@@ -294,7 +377,7 @@ function testStrategico() {
   console.assert(r1.uscita_strategica.startsWith("16:22") === false, "✅ Test 2 strategica: acc e rec superano 29 min, ridotto");
 
   const r2 = calcolaGiornata("lunga", timeToMinutes("11:49"));
-  console.assert(r2.uscita_strategica <= "19:30", "❌ Test 3: limite orario massimo superato");
+  console.assert(estraiOrario(r2.uscita_strategica) <= "19:30", "❌ Test 3: limite orario massimo superato");
 
   const r3 = calcolaGiornata("corta", timeToMinutes("08:38"));
   console.assert(r3.uscita_strategica.startsWith("15:28"), "❌ Test 4: strategica errata su caso classico");
