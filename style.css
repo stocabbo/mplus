@@ -380,32 +380,11 @@ input:checked + .slider:before {
   .close-btn { background: #293a4f; color: #8fc4ff; }
 
   .feedback { color: #aeb8c2; }
-  .planner-link { border-color: #39424d; color: #eee; }
-  .planner-link small,
-  .intro,
-  .field-help,
-  .goal-summary span,
-  .plan-card > p { color: #aeb8c2; }
-  .planner fieldset,
-  .plan-card { border-color: #46505c; }
-  .planner input,
-  .planner select { background: #292f36; border-color: #56616e; color: #fff; }
-  .goal-summary { background: #24394f; }
-  .chip-list li { background: #263d54; color: #9bcaff; }
-  .calendar-list { border-color: #39424d; }
 }
 
 @media (max-width: 430px) {
   body { padding: 0; }
   .phone { border-radius: 0; min-height: 100vh; width: 100%; }
-}
-
-@media (max-width: 560px) {
-  .form-grid { grid-template-columns: 1fr; }
-  .exclusion-row { grid-template-columns: 1fr 1fr; }
-  .exclusion-row .secondary-btn { grid-column: 1 / -1; }
-  .plan-card-heading { align-items: flex-start; gap: 8px; }
-  .plan-card-heading > strong { text-align: right; }
 }
 
 @media (prefers-reduced-motion: reduce) {
