@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#007aff">
+  <meta name="description" content="Crea un piano MPLUS per raggiungere il tuo obiettivo di eccedenza.">
+  <title>Pianifica obiettivo · MPLUS</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="phone planner">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">MPLUS · PIANO</p>
+        <h1>Raggiungi il tuo obiettivo</h1>
+      </div>
+      <a class="icon-btn back-btn" href="index.html" aria-label="Torna al calcolo giornaliero">←</a>
+    </header>
+
+    <p class="intro">Indica il saldo di partenza e dove vuoi arrivare. Ti proporremo fino a tre ritmi, senza superare 29 minuti al giorno né 4 ore totali.</p>
+
+    <form id="planner_form">
+      <div class="form-grid">
+        <label>Saldo MPLUS attuale <span class="optional">opzionale</span>
+          <span class="field-with-unit"><input id="current_balance" type="number" min="0" max="4" step="0.25" value="0" inputmode="decimal"><span>ore</span></span>
+        </label>
+        <label>Obiettivo MPLUS
+          <span class="field-with-unit"><input id="target_balance" type="number" min="0.25" max="4" step="0.25" required inputmode="decimal" placeholder="es. 3"><span>ore</span></span>
+        </label>
+      </div>
+
+      <fieldset>
+        <legend>Tempo a disposizione</legend>
+        <div class="duration-row">
+          <input id="duration_value" type="number" min="1" max="52" value="4" required aria-label="Durata">
+          <select id="duration_unit" aria-label="Unità della durata">
+            <option value="weeks">settimane</option>
+            <option value="days">giorni</option>
+          </select>
+        </div>
+        <label class="date-label">A partire dal
+          <input id="start_date" type="date" required>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Giorni da evitare <span class="optional">opzionale</span></legend>
+        <p class="field-help">Sabato e domenica sono già esclusi. Aggiungi ferie, smart working o altri giorni non disponibili.</p>
+        <div class="exclusion-row">
+          <input id="excluded_date" type="date" aria-label="Data da evitare">
+          <select id="excluded_reason" aria-label="Motivo">
+            <option value="Ferie">Ferie</option>
+            <option value="Smart working">Smart working</option>
+            <option value="Non disponibile">Altro</option>
+          </select>
+          <button id="add_exclusion" class="secondary-btn" type="button">Aggiungi</button>
+        </div>
+        <ul id="exclusion_list" class="chip-list" aria-live="polite"></ul>
+      </fieldset>
+
+      <button class="primary-btn submit-plan" type="submit">Crea le alternative</button>
+      <p id="planner_error" class="form-error" role="alert"></p>
+    </form>
+
+    <section id="plan_results" class="plan-results" aria-live="polite" hidden>
+      <div class="section-heading">
+        <p class="eyebrow">LE TUE ALTERNATIVE</p>
+        <h2>Scegli il ritmo giusto</h2>
+      </div>
+      <div id="plan_summary" class="goal-summary"></div>
+      <div id="plan_options" class="plan-options"></div>
+      <p class="plan-note">Il piano è indicativo: registra solo eccedenze effettivamente maturate e rispetta sempre le regole della tua organizzazione.</p>
+    </section>
+  </main>
+  <script src="planner.js"></script>
+</body>
+</html>
