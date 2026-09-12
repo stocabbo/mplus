@@ -6,7 +6,11 @@ const allowedReasons = new Set(['Ferie', 'Smart working', 'Indisponibile']);
 const form = document.getElementById('planner_form');
 const exclusionsList = document.getElementById('exclusions');
 const results = document.getElementById('planner_results');
+const feedback = document.getElementById('planner_feedback');
+const activePlan = document.getElementById('active_plan');
+const progressHistory = document.getElementById('progress_history');
 let exclusions = loadExclusions();
+let latestRequest = null;
 
 function isIsoDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
@@ -103,6 +107,7 @@ function minimumCalendarDays(requiredWorkingDays, start = new Date()) {
 }
 
 function renderPlans(plans, missing, suggestedDays) {
+  feedback.textContent = '';
   results.replaceChildren();
   if (!plans.length) {
     const error = document.createElement('p');
@@ -136,13 +141,110 @@ function renderPlans(plans, missing, suggestedDays) {
       item.innerHTML = `<span>${day.date.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' })}</span><strong>+${day.minutes} min</strong>`;
       calendar.append(item);
     });
-    details.append(calendar); card.append(details); results.append(card);
+    const share = document.createElement('button');
+    share.type = 'button';
+    share.className = 'secondary-btn plan-share';
+    share.textContent = 'Condividi piano';
+    share.addEventListener('click', () => sharePlan(plan));
+    const activate = document.createElement('button');
+    activate.type = 'button';
+    activate.className = 'primary-btn plan-activate';
+    activate.textContent = 'Usa questo piano';
+    activate.addEventListener('click', () => {
+      MplusTracking.activatePlan(plan, latestRequest.current, latestRequest.target);
+      feedback.textContent = `${plan.name} impostato come piano attivo.`;
+      renderTracking();
+    });
+    const actions = document.createElement('div');
+    actions.className = 'plan-actions';
+    actions.append(activate, share);
+    details.append(calendar); card.append(details, actions); results.append(card);
   });
+}
+
+function renderTracking() {
+  const state = MplusTracking.load();
+  if (!state.activePlan) {
+    activePlan.hidden = true;
+    progressHistory.hidden = true;
+    return;
+  }
+  const current = MplusTracking.balance(state);
+  const missing = Math.max(0, state.activePlan.target - current);
+  const percentage = Math.min(100, Math.round(current / state.activePlan.target * 100));
+  activePlan.innerHTML = `
+    <p class="eyebrow">PIANO ATTIVO</p>
+    <h2>${state.activePlan.name}</h2>
+    <p>${formatMinutes(current)} su ${formatMinutes(state.activePlan.target)} · mancano ${formatMinutes(missing)}</p>
+    <div class="progress-bar" aria-label="Avanzamento ${percentage}%"><span style="width: ${percentage}%"></span></div>
+    <button id="clear_plan" class="text-btn clear-plan" type="button">Chiudi piano e storico</button>
+  `;
+  document.getElementById('clear_plan').addEventListener('click', () => {
+    if (!window.confirm('Chiudere il piano attivo e cancellare il relativo storico?')) return;
+    MplusTracking.clearPlan();
+    feedback.textContent = 'Piano attivo chiuso.';
+    renderTracking();
+  });
+  activePlan.hidden = false;
+
+  const entryMap = new Map(state.entries.map(entry => [entry.date, entry.minutes]));
+  const rows = state.activePlan.schedule.map(day => ({ ...day, actual: entryMap.get(day.date) }));
+  const extraEntries = state.entries
+    .filter(entry => !state.activePlan.schedule.some(day => day.date === entry.date))
+    .map(entry => ({ ...entry, actual: entry.minutes }));
+  const allRows = [...rows, ...extraEntries].sort((a, b) => a.date.localeCompare(b.date));
+  const groups = new Map();
+  allRows.forEach(row => {
+    const month = row.date.slice(0, 7);
+    groups.set(month, [...(groups.get(month) || []), row]);
+  });
+  progressHistory.replaceChildren();
+  const title = document.createElement('h2');
+  title.textContent = 'Calendario e storico';
+  progressHistory.append(title);
+  groups.forEach((monthRows, month) => {
+    const monthTitle = document.createElement('h3');
+    monthTitle.textContent = new Date(`${month}-01T12:00:00`).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
+    const list = document.createElement('ul');
+    list.className = 'tracking-days';
+    monthRows.forEach(row => {
+      const item = document.createElement('li');
+      const label = new Date(`${row.date}T12:00:00`).toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric' });
+      const value = row.actual === undefined ? `Previsti +${row.minutes} min` : `Registrati +${row.actual} min`;
+      item.innerHTML = `<span>${label}</span><strong class="${row.actual === undefined ? '' : 'completed'}">${value}</strong>`;
+      list.append(item);
+    });
+    progressHistory.append(monthTitle, list);
+  });
+  progressHistory.hidden = false;
+}
+
+function formatPlanText(plan) {
+  const days = plan.schedule.map(day => {
+    const date = day.date.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
+    return `${date}: +${day.minutes} min`;
+  });
+  return [`Piano MPLUS · ${plan.name}`, ...days].join('\n');
+}
+
+async function sharePlan(plan) {
+  const text = formatPlanText(plan);
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: `Piano MPLUS · ${plan.name}`, text });
+      feedback.textContent = 'Piano condiviso.';
+    } else {
+      await navigator.clipboard.writeText(text);
+      feedback.textContent = 'Piano copiato negli appunti.';
+    }
+  } catch (error) {
+    if (error.name !== 'AbortError') feedback.textContent = 'Non è stato possibile condividere il piano.';
+  }
 }
 
 function formatMinutes(minutes) {
   const hours = Math.floor(minutes / 60); const rest = minutes % 60;
-  return [hours ? `${hours} h` : '', rest ? `${rest} min` : ''].filter(Boolean).join(' ');
+  return [hours ? `${hours} h` : '', rest ? `${rest} min` : '', !minutes ? '0 min' : ''].filter(Boolean).join(' ');
 }
 
 document.getElementById('add_exclusion').addEventListener('click', () => {
@@ -173,6 +275,7 @@ function createPlans() {
   const totalDays = document.getElementById('duration_unit').value === 'weeks' ? duration * 7 : duration;
   const days = workingDays(totalDays);
   const missing = target - current;
+  latestRequest = { current, target };
   const suggestedDays = minimumCalendarDays(Math.ceil(missing / MAX_DAILY_MINUTES));
   renderPlans(buildPlans(missing, days), missing, suggestedDays);
 }
@@ -187,6 +290,19 @@ form.addEventListener('submit', event => {
 });
 
 renderExclusions();
+renderTracking();
+
+document.getElementById('import_balance').addEventListener('click', () => {
+  const text = document.getElementById('balance_text').value;
+  const imported = MplusTracking.parseBalance(text);
+  const message = document.getElementById('import_feedback');
+  if (!Number.isInteger(imported) || imported < 0 || imported > MAX_BALANCE_MINUTES) {
+    message.textContent = 'Saldo non riconosciuto o fuori dall’intervallo 0-240 minuti.';
+    return;
+  }
+  document.getElementById('current_balance').value = imported;
+  message.textContent = `Saldo rilevato: ${formatMinutes(imported)}.`;
+});
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js');
