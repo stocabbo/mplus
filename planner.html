@@ -14,11 +14,19 @@
       <div><p class="eyebrow">MPLUS</p><h1>Pianifica un obiettivo</h1></div>
       <a class="back-link" href="index.html">← Oggi</a>
     </header>
+    <section id="active_plan" class="active-plan" hidden></section>
     <form id="planner_form" class="planner-form">
       <label>Saldo attuale (facoltativo)
         <input id="current_balance" type="number" min="0" max="240" step="1" placeholder="es. 20 minuti">
         <span class="help">Inseriscilo in minuti, oppure lascia vuoto per partire da zero.</span>
       </label>
+      <div class="balance-import">
+        <label>Importa saldo da testo
+          <textarea id="balance_text" rows="2" placeholder="Incolla ad esempio: Saldo MPLUS +02:15"></textarea>
+        </label>
+        <button id="import_balance" class="secondary-btn" type="button">Rileva saldo</button>
+        <p id="import_feedback" class="feedback" role="status" aria-live="polite"></p>
+      </div>
       <label>Obiettivo MPLUS
         <input id="target_balance" type="number" min="0.25" max="4" step="0.25" required placeholder="es. 3 ore">
       </label>
@@ -43,7 +51,10 @@
       <button class="primary-btn" type="submit">Crea le alternative</button>
     </form>
     <section id="planner_results" class="planner-results" aria-live="polite"></section>
+    <p id="planner_feedback" class="feedback" role="status" aria-live="polite"></p>
+    <section id="progress_history" class="progress-history" hidden></section>
   </main>
+  <script src="tracking.js"></script>
   <script src="planner.js"></script>
 </body>
 </html>

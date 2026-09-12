@@ -42,6 +42,22 @@
       <span id="toggle_label">Corta</span>
     </div>
 
+    <section id="today_plan" class="today-plan" hidden>
+      <div>
+        <p class="eyebrow">PIANO ATTIVO</p>
+        <h2 id="today_plan_name"></h2>
+        <p id="today_plan_status" class="plan-meta"></p>
+      </div>
+      <p id="today_plan_target" class="today-target"></p>
+      <div class="progress-row">
+        <label for="actual_progress">Minuti accumulati oggi</label>
+        <input id="actual_progress" type="number" min="0" max="29" step="1">
+        <button id="save_progress" class="secondary-btn" type="button">Registra</button>
+      </div>
+      <button id="remove_progress" class="text-btn progress-remove" type="button" hidden>Annulla registrazione di oggi</button>
+      <p id="progress_feedback" class="feedback" role="status" aria-live="polite"></p>
+    </section>
+
     <div id="output" class="result-cards" aria-live="polite"></div>
     <div id="countdown" class="countdown" aria-live="off"></div>
     <button id="share_result" class="share-btn" type="button" hidden>Condividi riepilogo</button>
@@ -69,6 +85,7 @@
     </div>
   </div>
 
+  <script src="tracking.js"></script>
   <script src="script.js"></script>
   <audio id="ping" src="ping.mp3" preload="auto"></audio>
 

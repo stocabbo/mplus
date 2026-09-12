@@ -50,7 +50,7 @@ function formatEFFRECACC(oreEff, acc) {
   return parts.length ? "(" + parts.join(", ") + ")" : "";
 }
 
-function calcolaGiornata(tipo, IN1) {
+function calcolaGiornata(tipo, IN1, extraCorta = settings.extraCorta) {
   const pausa = settings.pausaMinima;
   const pausaEff = Math.max(pausa, 30);
   const pausaBP = Math.max(pausa, 20);
@@ -60,7 +60,7 @@ function calcolaGiornata(tipo, IN1) {
   uscita_bp = Math.min(uscita_bp, 1170);
   const { inizio: pausaStart, fine: pausaEnd } = calcolaPausa(ingresso);
 
-  let accumulo_dichiarato = tipo === "corta" ? settings.extraCorta : 0;
+  let accumulo_dichiarato = tipo === "corta" ? extraCorta : 0;
   const ritardo = Math.max(0, IN1 - 540);
   if (tipo === "corta") accumulo_dichiarato += ritardo;
 
@@ -149,7 +149,10 @@ function aggiornaRisultati() {
   }
 
   const IN1 = timeToMinutes(oraIngresso);
-  const result = calcolaGiornata(tipoGiornata, IN1);
+  const trackingState = MplusTracking.load();
+  const plannedToday = MplusTracking.plannedForDate(trackingState);
+  const plannedExtra = trackingState.activePlan ? plannedToday : settings.extraCorta;
+  const result = calcolaGiornata(tipoGiornata, IN1, plannedExtra);
 
   const outputHTML = `
     <div class="result-card ${result.stato}">
@@ -194,6 +197,7 @@ if (ingressoEl && toggleEl) {
     aggiornaRisultati();
     initSettings();
     initQuickActions();
+    initTodayPlan();
   });
 }
 
@@ -345,6 +349,59 @@ function initQuickActions() {
       if (error.name !== 'AbortError') feedback.textContent = 'Non è stato possibile condividere il riepilogo.';
     }
   });
+}
+
+function renderTodayPlan() {
+  const container = document.getElementById('today_plan');
+  const state = MplusTracking.load();
+  if (!state.activePlan) {
+    container.hidden = true;
+    return;
+  }
+  const current = MplusTracking.balance(state);
+  const missing = Math.max(0, state.activePlan.target - current);
+  const planned = MplusTracking.plannedForDate(state);
+  const delta = MplusTracking.progressDelta(state);
+  const todayEntry = state.entries.find(entry => entry.date === MplusTracking.formatIsoDate());
+  document.getElementById('today_plan_name').textContent = state.activePlan.name;
+  const trend = delta === 0 ? 'in linea' : delta > 0 ? `${delta} min avanti` : `${Math.abs(delta)} min indietro`;
+  document.getElementById('today_plan_status').textContent = `Saldo ${formatMinutesLabel(current)} · mancano ${formatMinutesLabel(missing)} · ${trend}`;
+  document.getElementById('today_plan_target').textContent = missing === 0
+    ? '🎉 Obiettivo raggiunto.'
+    : planned > 0 ? `Oggi: +${planned} min` : 'Oggi non è previsto accumulo.';
+  document.getElementById('actual_progress').value = todayEntry?.minutes ?? planned;
+  document.getElementById('remove_progress').hidden = !todayEntry;
+  container.hidden = false;
+}
+
+function formatMinutesLabel(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return [hours ? `${hours} h` : '', rest || !hours ? `${rest} min` : ''].filter(Boolean).join(' ');
+}
+
+function initTodayPlan() {
+  const save = document.getElementById('save_progress');
+  save.addEventListener('click', () => {
+    const input = document.getElementById('actual_progress');
+    const minutes = Number(input.value);
+    const feedback = document.getElementById('progress_feedback');
+    if (!Number.isInteger(minutes) || minutes < 0 || minutes > MplusTracking.MAX_DAILY_MINUTES) {
+      feedback.textContent = 'Inserisci un valore intero tra 0 e 29 minuti.';
+      return;
+    }
+    MplusTracking.recordProgress(minutes);
+    feedback.textContent = 'Progresso registrato e piano ricalcolato.';
+    renderTodayPlan();
+    aggiornaRisultati();
+  });
+  document.getElementById('remove_progress').addEventListener('click', () => {
+    MplusTracking.removeProgress();
+    document.getElementById('progress_feedback').textContent = 'Registrazione rimossa e piano ricalcolato.';
+    renderTodayPlan();
+    aggiornaRisultati();
+  });
+  renderTodayPlan();
 }
 
 

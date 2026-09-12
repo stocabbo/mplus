@@ -22,6 +22,9 @@ MPLUS è una piccola applicazione web (PWA) per il calcolo dell'orario di uscita
 - **manifest.json**: definizione del manifest PWA (icone, colori, `start_url`, ecc.).
 - **offline.html**: pagina visualizzata in assenza di connettività.
 - **quick.html**: endpoint minimale per integrazione con Comandi Rapidi di iOS.
+- **planner.html**: pagina dedicata alla pianificazione di un obiettivo MPLUS.
+- **planner.js**: validazione, calcolo delle alternative e gestione delle giornate escluse dal pianificatore.
+- **tracking.js**: persistenza locale del piano attivo, saldo, progressi e redistribuzione delle giornate future.
 
 ## Funzionamento Principale
 
@@ -65,7 +68,8 @@ corrente facoltativo espresso in minuti (zero se omesso), un obiettivo
 obbligatorio espresso in ore e un orizzonte in giorni o settimane. Il saldo può
 quindi essere indicato con precisione al minuto, anche quando deriva da una
 giornata da 20 minuti; saldo e obiettivo non possono superare le 4 ore di
-eccedenza.
+eccedenza. L'obiettivo procede a intervalli di 15 minuti, deve essere superiore
+al saldo attuale e la durata deve essere compresa tra 1 e 365 giorni o settimane.
 
 L'app propone fino a tre alternative distinte: un piano rapido, uno equilibrato
 e uno leggero. Ogni proposta distribuisce soltanto i minuti mancanti, non supera
@@ -79,10 +83,31 @@ giornate disponibili non bastano, il pianificatore calcola il primo intervallo
 utile e propone un pulsante per impostarlo automaticamente in giorni. La pagina
 registra inoltre il Service Worker anche quando viene aperta direttamente, così
 da preparare l'utilizzo offline senza richiedere prima una visita alla home.
+Ogni alternativa può essere condivisa tramite il pannello nativo del dispositivo;
+se questo non è disponibile, il calendario del piano viene copiato negli appunti.
+
+Una delle alternative può essere impostata come **piano attivo**. La home mostra
+quindi il saldo, i minuti mancanti e l'accumulo previsto per la giornata, usando
+quest'ultimo per calcolare l'uscita strategica. L'utente può registrare da 0 a 29
+minuti effettivamente accumulati: il saldo viene aggiornato e i minuti residui
+sono redistribuiti automaticamente sulle successive giornate lavorative, tenendo
+conto delle esclusioni salvate. Il pianificatore mostra avanzamento, calendario
+mensile e storico delle registrazioni.
+Il piano può essere chiuso dal pianificatore, previa conferma, cancellando anche
+le registrazioni associate.
+
+Il saldo iniziale può anche essere rilevato da testo incollato dal cedolino. Sono
+riconosciuti formati come `Saldo +02:15`, `2h 15min` e valori numerici espressi in
+minuti; il valore viene sempre mostrato nel campo del saldo prima di creare il
+piano, così può essere verificato o corretto.
 
 ## Test
 
 Alla fine di `script.js` sono presenti tre funzioni di test (`testCalcolaBP`, `testEstratti`, `testStrategico`). Eseguono brevi verifiche tramite `console.assert` quando la pagina viene caricata, aiutando a mantenere la logica coerente.
+
+Non è configurata una suite di test obbligatoria né un processo di build. Dopo
+una modifica è quindi opportuno controllare almeno la sintassi dei file
+JavaScript e provare manualmente sia il calcolo giornaliero sia il pianificatore.
 
 ## Esecuzione Locale
 

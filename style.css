@@ -247,9 +247,28 @@ input:checked + .slider:before {
 .plan-card h2 { font-size: 18px; margin-bottom: 5px; }
 .plan-meta { color: #52606d; font-size: 13px; margin-bottom: 10px; }
 .plan-card summary { color: #0064d2; cursor: pointer; font-size: 14px; font-weight: 600; }
+.plan-actions { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; margin-top: 14px; }
+.plan-share { width: 100%; }
+.plan-activate { width: 100%; }
 .calendar { display: grid; gap: 6px; list-style: none; margin-top: 10px; }
 .calendar li { display: flex; justify-content: space-between; }
 .planner-error { background: #fff1f0; border-radius: 10px; color: #a51d17; padding: 12px; }
+.today-plan, .active-plan, .progress-history { background: #f7f9fc; border-radius: 14px; margin: 18px 0; padding: 16px; }
+.today-plan h2, .active-plan h2, .progress-history h2 { font-size: 18px; margin-bottom: 5px; }
+.today-target { font-size: 18px; font-weight: 600; margin: 12px 0; }
+.progress-row, .import-row { align-items: end; display: grid; gap: 8px; grid-template-columns: 1fr auto; }
+.progress-row label { grid-column: 1 / -1; font-size: 13px; font-weight: 600; }
+.progress-remove { margin-top: 8px; }
+.clear-plan { margin-top: 12px; }
+.progress-row input, .import-row input, .balance-import textarea { border: 1px solid #c8d0d9; border-radius: 10px; font: inherit; padding: 10px 12px; width: 100%; }
+.balance-import { display: grid; gap: 8px; }
+.progress-bar { background: #dce8f7; border-radius: 999px; height: 10px; margin-top: 12px; overflow: hidden; }
+.progress-bar span { background: #007aff; display: block; height: 100%; }
+.progress-history h3 { font-size: 14px; margin: 16px 0 8px; text-transform: capitalize; }
+.tracking-days { display: grid; gap: 6px; list-style: none; }
+.tracking-days li { background: #fff; border-radius: 8px; display: flex; justify-content: space-between; padding: 8px 10px; }
+.tracking-days strong { color: #52606d; font-size: 13px; }
+.tracking-days strong.completed { color: #16803a; }
 
 .settings-panel {
   position: fixed;
@@ -341,6 +360,8 @@ input:checked + .slider:before {
 
   .feedback { color: #aeb8c2; }
   .planner-form input, .planner-form select { background: #333; border-color: #555; color: #fff; }
+  .today-plan, .active-plan, .progress-history { background: #2a2a2a; }
+  .tracking-days li { background: #333; }
   .exclusions li, .plan-card { background: #2a2a2a; }
   .help, .plan-meta { color: #aeb8c2; }
 }
