@@ -230,6 +230,27 @@ input:checked + .slider:before {
   text-align: center;
 }
 
+.planner-link { color: #0064d2; display: block; font-size: 14px; margin-top: 22px; text-align: center; text-decoration: none; }
+.planner-page { width: min(680px, 100%); }
+.back-link { color: #0064d2; font-size: 14px; text-decoration: none; }
+.planner-form { display: grid; gap: 16px; }
+.planner-form label { display: grid; font-size: 14px; font-weight: 600; gap: 6px; }
+.planner-form input, .planner-form select { background: #fff; border: 1px solid #c8d0d9; border-radius: 10px; font: inherit; padding: 10px 12px; width: 100%; }
+.duration-row, .exclusion-row { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+.exclusion-row { grid-template-columns: 1.2fr 1fr auto; }
+.help { color: #52606d; font-size: 12px; font-weight: 400; }
+.exclusions { display: grid; gap: 8px; list-style: none; }
+.exclusions li { align-items: center; background: #f4f7fa; border-radius: 10px; display: flex; font-size: 13px; justify-content: space-between; padding: 8px 10px; }
+.text-btn { background: transparent; border: 0; color: #c42b22; padding: 4px; }
+.planner-results { display: grid; gap: 14px; margin-top: 24px; }
+.plan-card { background: #f7f9fc; border-left: 5px solid #007aff; border-radius: 14px; padding: 16px; }
+.plan-card h2 { font-size: 18px; margin-bottom: 5px; }
+.plan-meta { color: #52606d; font-size: 13px; margin-bottom: 10px; }
+.plan-card summary { color: #0064d2; cursor: pointer; font-size: 14px; font-weight: 600; }
+.calendar { display: grid; gap: 6px; list-style: none; margin-top: 10px; }
+.calendar li { display: flex; justify-content: space-between; }
+.planner-error { background: #fff1f0; border-radius: 10px; color: #a51d17; padding: 12px; }
+
 .settings-panel {
   position: fixed;
   top: 0;
@@ -319,12 +340,17 @@ input:checked + .slider:before {
   .close-btn { background: #293a4f; color: #8fc4ff; }
 
   .feedback { color: #aeb8c2; }
+  .planner-form input, .planner-form select { background: #333; border-color: #555; color: #fff; }
+  .exclusions li, .plan-card { background: #2a2a2a; }
+  .help, .plan-meta { color: #aeb8c2; }
 }
 
 @media (max-width: 430px) {
   body { padding: 0; }
   .phone { border-radius: 0; min-height: 100vh; width: 100%; }
 }
+
+@media (max-width: 520px) { .exclusion-row { grid-template-columns: 1fr 1fr; } .exclusion-row button { grid-column: 1 / -1; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before { animation-duration: .01ms !important; transition-duration: .01ms !important; }

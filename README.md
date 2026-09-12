@@ -57,6 +57,26 @@ Oltre ai calcoli di uscita, l'app indica l'orario consigliato per la pausa pranz
 
 Le preferenze vengono salvate in locale e rimangono attive ai successivi avvii.
 
+## Pianificatore degli obiettivi MPLUS
+
+Il collegamento **Pianifica un obiettivo MPLUS** apre una schermata separata, così
+il calcolo giornaliero rimane essenziale. Il pianificatore accetta un saldo
+corrente facoltativo (zero se omesso), un obiettivo obbligatorio e un orizzonte
+espresso in giorni o settimane. Saldo e obiettivo non possono superare le 4 ore
+di eccedenza.
+
+L'app propone fino a tre alternative: un piano rapido, uno equilibrato e uno
+leggero. Ogni proposta distribuisce soltanto i minuti mancanti, non supera i 29
+minuti al giorno e mostra un calendario con la data prevista di completamento.
+Sabati e domeniche sono esclusi automaticamente. Ferie, giornate di smart
+working e altre indisponibilità possono essere aggiunte manualmente e vengono
+ricordate sul dispositivo quando l'archiviazione locale è disponibile. Aggiungere
+o rimuovere un'esclusione aggiorna subito le alternative già visualizzate. Se le
+giornate disponibili non bastano, il pianificatore calcola il primo intervallo
+utile e propone un pulsante per impostarlo automaticamente in giorni. La pagina
+registra inoltre il Service Worker anche quando viene aperta direttamente, così
+da preparare l'utilizzo offline senza richiedere prima una visita alla home.
+
 ## Test
 
 Alla fine di `script.js` sono presenti tre funzioni di test (`testCalcolaBP`, `testEstratti`, `testStrategico`). Eseguono brevi verifiche tramite `console.assert` quando la pagina viene caricata, aiutando a mantenere la logica coerente.
