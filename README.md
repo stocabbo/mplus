@@ -3,12 +3,31 @@
 ## Panoramica
 
 
-MPLUS è una piccola applicazione web (PWA) per il calcolo dell'orario di uscita ottimale dal lavoro. L'interfaccia è in italiano e include una modalità "giornata corta" e "giornata lunga". Al caricamento l'app può operare offline grazie al Service Worker e al manifest che permette l'installazione su dispositivi mobili. Oltre all'orario di uscita, l'app suggerisce anche quando iniziare e terminare la pausa pranzo e consente di personalizzare i minuti extra tramite l'icona a forma di ingranaggio.
+MPLUS è una piccola applicazione web (PWA) per il calcolo dell'orario di uscita ottimale dal lavoro. L'interfaccia è in italiano e include una modalità "giornata corta" e "giornata lunga". Al caricamento l'app può operare offline grazie al Service Worker e al manifest che permette l'installazione su dispositivi mobili. Oltre all'orario di uscita, l'app suggerisce anche quando iniziare e terminare la pausa pranzo e consente di personalizzare i minuti extra tramite l'icona a forma di ingranaggio. L'ultimo ingresso e la tipologia di giornata vengono ricordati sul dispositivo per velocizzare gli utilizzi successivi.
+
+La schermata separata **Pianifica un obiettivo** crea invece un calendario personale per portare il saldo MPLUS attuale fino a un obiettivo scelto, senza appesantire il calcolo giornaliero.
+
+## Pianificatore obiettivi
+
+- Il saldo attuale è facoltativo e parte da zero; l'obiettivo è obbligatorio. Entrambi rispettano il limite massimo di **4 ore**.
+- È possibile indicare quanti giorni o settimane si hanno a disposizione e la data dalla quale iniziare.
+- Sabato e domenica sono esclusi automaticamente. Ferie, smart working e altre indisponibilità possono essere aggiunte manualmente e vengono ricordate sul dispositivo.
+- Il pianificatore propone fino a tre alternative: la più rapida, una equilibrata e una più leggera. Ogni alternativa mostra il carico massimo giornaliero, la data di completamento e il calendario dettagliato.
+- Nessun giorno supera i **29 minuti di eccedenza**, in coerenza con la regola usata dal calcolo della giornata corta. Se il periodo non contiene abbastanza giornate disponibili, l'app indica quante ne servono.
+
+## Azioni rapide e accessibilità
+
+- **Adesso** imposta l'orario di ingresso sull'ora corrente con un solo tocco.
+- **Condividi riepilogo** usa il pannello di condivisione del dispositivo; sui browser che non lo supportano copia il risultato negli appunti.
+- Il pannello delle impostazioni può essere chiuso con il pulsante dedicato, con `Esc` o toccando lo sfondo; alla chiusura il focus torna al pulsante delle impostazioni.
+- **Ripristina** riporta nel modulo i valori predefiniti, che diventano effettivi premendo **Salva**.
+- L'interfaccia rispetta la preferenza di sistema per la riduzione delle animazioni e mantiene il supporto al tema scuro.
 
 ## Struttura del progetto
 
 - **index.html**: pagina principale con gli input per l'ora di ingresso, il selettore della tipologia di giornata e l'inclusione degli script.
 - **script.js**: logica di calcolo dell'orario, gestione del countdown, notifiche e semplici test automatici in `console.assert`.
+- **planner.html** e **planner.js**: schermata separata e logica per generare le alternative del piano di accumulo.
 - **style.css**: stili dell'interfaccia con supporto al tema scuro e animazioni.
 - **service-worker.js**: caching delle risorse per l'utilizzo offline.
 - **manifest.json**: definizione del manifest PWA (icone, colori, `start_url`, ecc.).
@@ -28,7 +47,7 @@ Il file `script.js` gestisce inoltre l'aggiornamento dinamico dei risultati e il
 
 ## Modalità Offline
 
-Il `service-worker.js` memorizza in cache le risorse di base. Se una richiesta fallisce, viene mostrata la pagina `offline.html`.
+Il `service-worker.js` memorizza in cache le risorse di base, incluso il suono di avviso e l'immagine di avvio iOS. Se una richiesta fallisce, viene mostrata la pagina `offline.html`.
 
 ## Impostazioni Personalizzate
 

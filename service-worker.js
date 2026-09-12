@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'mplus-cache-v1';
+const CACHE_NAME = 'mplus-cache-v4';
 const CACHE_PREFIX = '/mplus';
 
 const ASSETS_TO_CACHE = [
@@ -7,12 +7,16 @@ const ASSETS_TO_CACHE = [
   `${CACHE_PREFIX}/index.html`,
   `${CACHE_PREFIX}/style.css`,
   `${CACHE_PREFIX}/script.js`,
+  `${CACHE_PREFIX}/planner.html`,
+  `${CACHE_PREFIX}/planner.js`,
   `${CACHE_PREFIX}/manifest.json`,
   `${CACHE_PREFIX}/offline.html`,
   `${CACHE_PREFIX}/quick.html`,
   `${CACHE_PREFIX}/favicon.ico`,
   `${CACHE_PREFIX}/icon-192.png`,
   `${CACHE_PREFIX}/icon-512.png`,
+  `${CACHE_PREFIX}/ping.mp3`,
+  `${CACHE_PREFIX}/apple-splash-1170x2532.png`,
 ];
 
 self.addEventListener('install', event => {
