@@ -61,13 +61,16 @@ Le preferenze vengono salvate in locale e rimangono attive ai successivi avvii.
 
 Il collegamento **Pianifica un obiettivo MPLUS** apre una schermata separata, così
 il calcolo giornaliero rimane essenziale. Il pianificatore accetta un saldo
-corrente facoltativo (zero se omesso), un obiettivo obbligatorio e un orizzonte
-espresso in giorni o settimane. Saldo e obiettivo non possono superare le 4 ore
-di eccedenza.
+corrente facoltativo espresso in minuti (zero se omesso), un obiettivo
+obbligatorio espresso in ore e un orizzonte in giorni o settimane. Il saldo può
+quindi essere indicato con precisione al minuto, anche quando deriva da una
+giornata da 20 minuti; saldo e obiettivo non possono superare le 4 ore di
+eccedenza.
 
-L'app propone fino a tre alternative: un piano rapido, uno equilibrato e uno
-leggero. Ogni proposta distribuisce soltanto i minuti mancanti, non supera i 29
-minuti al giorno e mostra un calendario con la data prevista di completamento.
+L'app propone fino a tre alternative distinte: un piano rapido, uno equilibrato
+e uno leggero. Ogni proposta distribuisce soltanto i minuti mancanti, non supera
+i 29 minuti al giorno e mostra un calendario con la data prevista di
+completamento.
 Sabati e domeniche sono esclusi automaticamente. Ferie, giornate di smart
 working e altre indisponibilità possono essere aggiunte manualmente e vengono
 ricordate sul dispositivo quando l'archiviazione locale è disponibile. Aggiungere

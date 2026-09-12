@@ -80,9 +80,10 @@ function buildPlans(minutes, days) {
   ];
   const seen = new Set();
   return candidates.flatMap(([name, count]) => {
-    if (seen.has(count)) return [];
-    seen.add(count);
-    const schedule = distribute(minutes, days.slice(0, count));
+    const effectiveCount = Math.min(count, days.length, minutes);
+    if (seen.has(effectiveCount)) return [];
+    seen.add(effectiveCount);
+    const schedule = distribute(minutes, days.slice(0, effectiveCount));
     return schedule ? [{ name, schedule }] : [];
   });
 }
@@ -152,12 +153,21 @@ document.getElementById('add_exclusion').addEventListener('click', () => {
   saveExclusions(); renderExclusions(); refreshPlans();
 });
 
+function isValidPlanRequest(current, target, duration) {
+  return Number.isFinite(current) && Number.isInteger(current)
+    && Number.isFinite(target) && Number.isInteger(target) && target % 15 === 0
+    && Number.isFinite(duration) && Number.isInteger(duration) && duration >= 1 && duration <= 365
+    && current >= 0 && current <= MAX_BALANCE_MINUTES
+    && target >= 15 && target <= MAX_BALANCE_MINUTES && target > current;
+}
+
 function createPlans() {
-  const current = Math.round((Number(document.getElementById('current_balance').value) || 0) * 60);
-  const target = Math.round(Number(document.getElementById('target_balance').value) * 60);
+  const currentValue = document.getElementById('current_balance').value;
+  const current = currentValue === '' ? 0 : Number(currentValue);
+  const target = Number(document.getElementById('target_balance').value) * 60;
   const duration = Number(document.getElementById('duration').value);
-  if (current < 0 || current > MAX_BALANCE_MINUTES || target <= current || target > MAX_BALANCE_MINUTES) {
-    results.innerHTML = '<p class="planner-error">Inserisci un obiettivo maggiore del saldo attuale e non superiore a 4 ore.</p>';
+  if (!isValidPlanRequest(current, target, duration)) {
+    results.innerHTML = '<p class="planner-error">Controlla saldo, obiettivo e durata. L’obiettivo deve superare il saldo e non può eccedere 4 ore.</p>';
     return;
   }
   const totalDays = document.getElementById('duration_unit').value === 'weeks' ? duration * 7 : duration;

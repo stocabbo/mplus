@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'mplus-cache-v4';
+const CACHE_NAME = 'mplus-cache-v5';
 const CACHE_PREFIX = '/mplus';
 
 const ASSETS_TO_CACHE = [
