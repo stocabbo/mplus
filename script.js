@@ -397,8 +397,12 @@ function initTodayPlan() {
   const save = document.getElementById('save_progress');
   save.addEventListener('click', () => {
     const input = document.getElementById('actual_progress');
-    const minutes = Number(input.value);
     const feedback = document.getElementById('progress_feedback');
+    if (input.value.trim() === '') {
+      feedback.textContent = 'Inserisci i minuti accumulati prima di registrare.';
+      return;
+    }
+    const minutes = Number(input.value);
     if (!Number.isInteger(minutes) || minutes < 0 || minutes > MplusTracking.MAX_DAILY_MINUTES) {
       feedback.textContent = 'Inserisci un valore intero tra 0 e 29 minuti.';
       return;

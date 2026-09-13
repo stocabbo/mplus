@@ -89,7 +89,8 @@ se questo non è disponibile, il calendario del piano viene copiato negli appunt
 Una delle alternative può essere impostata come **piano attivo**. La home mostra
 quindi il saldo, i minuti mancanti e l'accumulo previsto per la giornata, usando
 quest'ultimo per calcolare l'uscita strategica. L'utente può registrare da 0 a 29
-minuti effettivamente accumulati: il saldo viene aggiornato e i minuti residui
+minuti effettivamente accumulati (lo zero deve essere inserito esplicitamente):
+il saldo viene aggiornato e i minuti residui
 sono redistribuiti automaticamente sulle successive giornate lavorative, tenendo
 conto delle esclusioni salvate. Il pianificatore mostra avanzamento, calendario
 mensile e storico delle registrazioni.
