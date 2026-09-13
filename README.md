@@ -93,6 +93,12 @@ minuti effettivamente accumulati: il saldo viene aggiornato e i minuti residui
 sono redistribuiti automaticamente sulle successive giornate lavorative, tenendo
 conto delle esclusioni salvate. Il pianificatore mostra avanzamento, calendario
 mensile e storico delle registrazioni.
+
+Se esiste già un piano attivo, l'attivazione di una nuova alternativa richiede una
+conferma esplicita perché sostituisce il piano e cancella il relativo storico. Nella
+home, i minuti previsti per oggi determinano l'uscita strategica anche quando è
+selezionata la giornata lunga: in questo caso il consiglio dà priorità all'accumulo
+pianificato invece dell'anticipo configurato per le normali giornate lunghe.
 Il piano può essere chiuso dal pianificatore, previa conferma, cancellando anche
 le registrazioni associate.
 

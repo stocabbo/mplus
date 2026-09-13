@@ -50,7 +50,7 @@ function formatEFFRECACC(oreEff, acc) {
   return parts.length ? "(" + parts.join(", ") + ")" : "";
 }
 
-function calcolaGiornata(tipo, IN1, extraCorta = settings.extraCorta) {
+function calcolaGiornata(tipo, IN1, extraAccumulo = tipo === "corta" ? settings.extraCorta : 0) {
   const pausa = settings.pausaMinima;
   const pausaEff = Math.max(pausa, 30);
   const pausaBP = Math.max(pausa, 20);
@@ -60,7 +60,7 @@ function calcolaGiornata(tipo, IN1, extraCorta = settings.extraCorta) {
   uscita_bp = Math.min(uscita_bp, 1170);
   const { inizio: pausaStart, fine: pausaEnd } = calcolaPausa(ingresso);
 
-  let accumulo_dichiarato = tipo === "corta" ? extraCorta : 0;
+  let accumulo_dichiarato = extraAccumulo;
   const ritardo = Math.max(0, IN1 - 540);
   if (tipo === "corta") accumulo_dichiarato += ritardo;
 
@@ -100,17 +100,30 @@ function calcolaGiornata(tipo, IN1, extraCorta = settings.extraCorta) {
     }
   } else {
     const uscita_normale = ingresso + pausaEff + durata_teorica;
-    uscita_strategica = Math.min(uscita_normale - settings.recuperoLunga, 1170);
+    const accumuloPianificato = Math.min(extraAccumulo, max_totale);
+    uscita_strategica = Math.min(
+      accumuloPianificato > 0
+        ? uscita_normale + accumuloPianificato
+        : uscita_normale - settings.recuperoLunga,
+      1170
+    );
     ore_eff_strategica = uscita_strategica - ingresso - pausaEff;
 
-    if (uscita_normale > 1170) {
+    if (uscita_normale + accumuloPianificato > 1170) {
       stato = "red";
       badge = "⚠️ 19:30";
-      suggerimento = "⚠️ Chiusura 19:30: pianifica un recupero.";
+      const accumulo = Math.max(0, ore_eff_strategica - durata_teorica);
+      suggerimento = accumuloPianificato > 0
+        ? `⚠️ Chiusura 19:30: accumulo max ${accumulo} min.`
+        : "⚠️ Chiusura 19:30: pianifica un recupero.";
     } else if (uscita_bp >= 1170) {
       stato = "red";
       badge = "⚠️ 19:30";
       suggerimento = "⚠️ Chiusura 19:30: pianifica un recupero.";
+    } else if (accumuloPianificato > 0) {
+      stato = "yellow";
+      badge = `↪︎ +${accumuloPianificato} min`;
+      suggerimento = `⏱️ Esci alle ${minutesToTime(uscita_strategica)} per +${accumuloPianificato} min pianificati.`;
     } else if (ore_eff_strategica >= 510) {
       stato = "yellow";
       badge = `↪︎ -${settings.recuperoLunga} min`;
@@ -151,7 +164,7 @@ function aggiornaRisultati() {
   const IN1 = timeToMinutes(oraIngresso);
   const trackingState = MplusTracking.load();
   const plannedToday = MplusTracking.plannedForDate(trackingState);
-  const plannedExtra = trackingState.activePlan ? plannedToday : settings.extraCorta;
+  const plannedExtra = trackingState.activePlan ? plannedToday : undefined;
   const result = calcolaGiornata(tipoGiornata, IN1, plannedExtra);
 
   const outputHTML = `
@@ -435,6 +448,10 @@ function testStrategico() {
 
   const r2 = calcolaGiornata("lunga", timeToMinutes("11:49"));
   console.assert(estraiOrario(r2.uscita_strategica) <= "19:30", "❌ Test 3: limite orario massimo superato");
+
+  const r2Pianificato = calcolaGiornata("lunga", timeToMinutes("08:00"), 20);
+  console.assert(r2Pianificato.uscita_strategica.startsWith("17:50"), "❌ Test 3b: accumulo pianificato ignorato nella giornata lunga");
+  console.assert(r2Pianificato.badge.includes("+20 min"), "❌ Test 3c: badge accumulo giornata lunga errato");
 
   const r3 = calcolaGiornata("corta", timeToMinutes("08:38"));
   console.assert(r3.uscita_strategica.startsWith("15:28"), "❌ Test 4: strategica errata su caso classico");
