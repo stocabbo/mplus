@@ -17,7 +17,6 @@
 
   function isValidSchedule(schedule) {
     return Array.isArray(schedule)
-      && schedule.length <= MAX_BALANCE_MINUTES
       && schedule.every(day => /^\d{4}-\d{2}-\d{2}$/.test(day.date)
         && Number.isInteger(day.minutes) && day.minutes >= 0 && day.minutes <= MAX_DAILY_MINUTES);
   }
