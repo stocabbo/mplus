@@ -151,6 +151,9 @@ function renderPlans(plans, missing, suggestedDays) {
     activate.className = 'primary-btn plan-activate';
     activate.textContent = 'Usa questo piano';
     activate.addEventListener('click', () => {
+      const currentState = MplusTracking.load();
+      if (currentState.activePlan
+        && !window.confirm('Sostituire il piano attivo e cancellare il relativo storico?')) return;
       MplusTracking.activatePlan(plan, latestRequest.current, latestRequest.target);
       feedback.textContent = `${plan.name} impostato come piano attivo.`;
       renderTracking();
