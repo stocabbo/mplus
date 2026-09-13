@@ -1,6 +1,8 @@
 (function initMplusTracking(global) {
   const STORAGE_KEY = 'mplus_tracking';
   const MAX_DAILY_MINUTES = 29;
+  const MIN_TARGET_MINUTES = 15;
+  const MAX_BALANCE_MINUTES = 240;
 
   function formatIsoDate(date = new Date()) {
     const year = date.getFullYear();
@@ -13,16 +15,27 @@
     return { activePlan: null, entries: [] };
   }
 
+  function isValidSchedule(schedule) {
+    return Array.isArray(schedule)
+      && schedule.length <= MAX_BALANCE_MINUTES
+      && schedule.every(day => /^\d{4}-\d{2}-\d{2}$/.test(day.date)
+        && Number.isInteger(day.minutes) && day.minutes >= 0 && day.minutes <= MAX_DAILY_MINUTES);
+  }
+
   function load() {
     try {
       const state = JSON.parse(localStorage.getItem(STORAGE_KEY));
       const validPlan = !state?.activePlan || (
         typeof state.activePlan.name === 'string'
         && Number.isInteger(state.activePlan.target)
+        && state.activePlan.target >= MIN_TARGET_MINUTES
+        && state.activePlan.target <= MAX_BALANCE_MINUTES
         && Number.isInteger(state.activePlan.startingBalance)
-        && Array.isArray(state.activePlan.schedule)
-        && state.activePlan.schedule.every(day => /^\d{4}-\d{2}-\d{2}$/.test(day.date)
-          && Number.isInteger(day.minutes) && day.minutes >= 0 && day.minutes <= MAX_DAILY_MINUTES)
+        && state.activePlan.startingBalance >= 0
+        && state.activePlan.startingBalance < state.activePlan.target
+        && isValidSchedule(state.activePlan.schedule)
+        && (state.activePlan.baselineSchedule === undefined
+          || isValidSchedule(state.activePlan.baselineSchedule))
       );
       const validEntries = Array.isArray(state?.entries)
         && state.entries.every(entry => /^\d{4}-\d{2}-\d{2}$/.test(entry.date)
@@ -90,7 +103,7 @@
     return dates;
   }
 
-  function redistribute(state, fromDate) {
+  function redistribute(state, fromDate, referenceSchedule = state.activePlan.schedule) {
     const plan = state.activePlan;
     const remaining = Math.max(0, plan.target - balance(state));
     const past = plan.schedule.filter(day => day.date <= fromDate);
@@ -98,7 +111,7 @@
       plan.schedule = past;
       return;
     }
-    const oldFutureCount = plan.schedule.filter(day => day.date > fromDate).length;
+    const oldFutureCount = referenceSchedule.filter(day => day.date > fromDate).length;
     const count = Math.max(Math.ceil(remaining / MAX_DAILY_MINUTES), Math.min(oldFutureCount, remaining));
     const dates = nextWorkingDates(fromDate, count);
     const base = Math.floor(remaining / count);
@@ -121,7 +134,7 @@
     const state = load();
     if (!state.activePlan) return null;
     state.entries = state.entries.filter(entry => entry.date !== date);
-    redistribute(state, date);
+    redistribute(state, date, state.activePlan.baselineSchedule || state.activePlan.schedule);
     return save(state);
   }
 
